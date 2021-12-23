@@ -43,6 +43,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         }
 
     </style>
+    @yield('style')
 </head>
 <!--
 BODY TAG OPTIONS:

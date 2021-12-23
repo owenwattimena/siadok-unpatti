@@ -6,11 +6,7 @@
 
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
-            <div class="pull-left image">
-                <img src="https://ui-avatars.com/api/?name={{ \Auth::user()->name }}" class="img-circle"
-                    alt="User Image">
-            </div>
-            <div class="pull-left info">
+            <div class="info" style="position: static; text-align: center">
                 <p>{{ \Auth::user()->name }}</p>
                 <!-- Status -->
                 <a href="#"><i class="fa fa-circle text-success"></i> {{ \Auth::user()->email }}</a>
@@ -34,17 +30,17 @@
         <ul class="sidebar-menu" data-widget="tree">
             {{-- <li class="header">HEADER</li> --}}
             <!-- Optionally, you can add icons to the links -->
-            <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-            <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
-            <li class="treeview">
-                <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span>
+            <li class="{{ (request()->is('dashboard*')) ? 'active' : '' }}"><a href="{{ route('dashboard') }}"><i class="fa fa-map"></i> <span>Peta</span></a></li>
+            {{-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li> --}}
+            <li class="treeview {{ ((request()->is('lokasi*')) || (request()->is('alumni*'))) ? 'active' : '' }}">
+                <a href="#"><i class="fa fa-list"></i> <span>Master Data</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="#">Link in level 2</a></li>
-                    <li><a href="#">Link in level 2</a></li>
+                    <li class="{{ (request()->is('lokasi*')) ? 'active' : '' }}"><a href="{{ route('lokasi.index') }}"><i class="fa fa-map-marker"></i> Lokasi</a></li>
+                    <li class="{{ (request()->is('alumni*')) ? 'active' : '' }}"><a href="{{ route('alumni.index') }}"><i class="fa fa-users"></i> Alumni</a></li>
                 </ul>
             </li>
         </ul>

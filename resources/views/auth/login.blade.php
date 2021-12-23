@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Log in</title>
+    <title>SITANI TERPATTI | Log in</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.7 -->
@@ -24,29 +24,24 @@
   <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
   <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
   <![endif]-->
-
-    <!-- Google Font -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
-
-        html body .login-logo {
-            font-family: 'Kaushan Script', cursive !important;
+  <style>
+      .login-logo{
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 0;
         }
-
-    </style>
+  </style>
 </head>
 
 <body class="hold-transition login-page">
     <div class="login-box">
-        <div class="login-logo">
-            <a href="{{ asset('assets/') }}/index2.html"><b>Ranting</b>3</a>
-        </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">Sign in to start your session</p>
+            <div class="login-logo">
+                <img src="https://fk.unpatti.ac.id/wp-content/uploads/2020/09/cropped-logo-kecil-4.png" alt="" width="150" style="margin-bottom: 15px"><br>
+                <a href="{{ asset('assets/') }}/index2.html">APLIKASI PENEMPATAN ALUMNI</a>
+            </div>
+            <p class="login-box-msg">Masuk untuk memulai sesi anda</p>
             @if (session('status'))
                 <div class="alert alert-{!! session('status') !!} alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
@@ -57,9 +52,9 @@
             <form action="{{ route('login.login') }}" method="post">
                 @csrf
                 <div class="form-group has-feedback">
-                    <input type="email" class="form-control" name="email" placeholder="Email" required>
-                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                    @error('email')
+                    <input type="text" class="form-control" name="username" placeholder="Username" required>
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    @error('username')
                         <span class="text-danger">
                             {{ $message }}
                         </span>
@@ -73,13 +68,13 @@
                     <div class="col-xs-8">
                         <div class="checkbox icheck">
                             <label>
-                                <input type="checkbox" name="remember_me" value="true"> Remember Me
+                                <input type="checkbox" name="remember_me" value="true"> Ingat saya
                             </label>
                         </div>
                     </div>
                     <!-- /.col -->
                     <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">MASUK</button>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -96,8 +91,8 @@
             </div> --}}
             <!-- /.social-auth-links -->
 
-            <a href="{{ route('forgot-password') }}">I forgot my password</a><br>
-            <a href="register.html" class="text-center">Register a new membership</a>
+            {{-- <a href="{{ route('forgot-password') }}">I forgot my password</a><br>
+            <a href="register.html" class="text-center">Register a new membership</a> --}}
 
         </div>
         <!-- /.login-box-body -->

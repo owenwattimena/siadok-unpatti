@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AlumniController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\LokasiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -20,7 +23,7 @@ Route::get('/mail', function () {
     return view('auth.mail-forgot-password');
 });
 Route::get('/', function () {
-    return view('web.home');
+    return redirect()->route('login');
 });
 Route::get('/post-list', function () {
     return view('web.post-list');
@@ -43,11 +46,22 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::get('/dashboard/profile', [ProfileController::class, 'index'])->name('dashboard.profile');
     Route::put('/dashboard/profile', [ProfileController::class, 'updateProfile'])->name('dashboard.profile.put');
     Route::put('/dashboard/profile/change-password', [ProfileController::class, 'changePassword'])->name('dashboard.profile.password');
+    Route::prefix('lokasi')->group(function () {
+        Route::get('/', [LokasiController::class, 'index'])->name('lokasi.index');
+        Route::post('store', [LokasiController::class, 'store'])->name('lokasi.store');
+        Route::post('{id}/update', [LokasiController::class, 'update'])->name('lokasi.update');
+        Route::delete('{id}/delete', [LokasiController::class, 'delete'])->name('lokasi.delete');
+    });
+    
+    Route::prefix('alumni')->group(function () {
+        Route::get('/', [AlumniController::class, 'index'])->name('alumni.index');
+        Route::post('store', [AlumniController::class, 'store'])->name('alumni.store');
+        Route::put('{id}/update', [AlumniController::class, 'update'])->name('alumni.update');
+        Route::delete('{id}/delete', [AlumniController::class, 'delete'])->name('alumni.delete');
+    });
 });

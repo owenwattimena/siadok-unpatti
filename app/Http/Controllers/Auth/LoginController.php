@@ -18,18 +18,18 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:users',
+            'username' => 'required|exists:users',
         ]);
         
         $credential = [
-            'email' => $request->email,
+            'username' => $request->username,
             'password' => $request->password,
         ];
         
         $remember_me  = ( !empty( $request->remember_me ) ) ? TRUE : FALSE;
 
         if(\Auth::attempt($credential)){
-            $user = User::where( ["email" => $credential['email']] )->first();
+            $user = User::where( ["username" => $credential['username']] )->first();
             
             \Auth::login($user, $remember_me);
             
