@@ -136,8 +136,7 @@
                                 alt="User Image"> --}}
 
                             <p>
-                                {{ \Auth::user()->name }}
-                                <small>{{ \Auth::user()->email }}</small>
+                                <i class="fa fa-lock"></i> {{ \Auth::user()->name }}
                             </p>
                         </li>
                         <!-- Menu Body -->

@@ -4,9 +4,8 @@
 <!-- Leaflet -->
 {{-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script> --}}
-<link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.css" />
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
-
+{{-- <link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.css" /> --}}
+@include('assets.css.leaflet')
 <style>
     #map { height: 650px; }
     .leaflet-popup-content-wrapper{
@@ -84,8 +83,9 @@
 
 @section('script')
 <script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.js"></script>
-<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js" integrity="sha512-e+JSf1UWuoLdiGeXXi5byQqIN7ojQLLgvC+aV0w9rnKNwNDBAz99sCgS20+PjT/r+yitmU7kpGVZJQDDgevhoA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
+{{-- <script src="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.js"></script> --}}
+@include('assets.js.leaflet')
 <script>
     (function() {
 
@@ -104,6 +104,7 @@
         
         mbAttr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
         
+        // mbUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         mbUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
         
         base_layer = L.tileLayer(mbUrl, {
@@ -118,6 +119,18 @@
             layers: [base_layer],
         }).setView([-6.0251815, 131.1685883]);
         map.addControl(new L.Control.Fullscreen())
+        L.marker([-3.3163733, 126.5720491],{opacity:0.01}).bindLabel('KAB. BURU', {noHide: true, offset: [-42,-40], }).addTo(map);
+        L.marker([-3.600275,126.6161067],{opacity:0.01}).bindLabel('KAB. BURU SELATAN', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-6.161061,134.4254625],{opacity:0.01}).bindLabel('KAB. KEP. ARU', {noHide: true, offset: [-52,-10], }).addTo(map);
+        L.marker([-7.4597688,131.4123121],{opacity:0.01}).bindLabel('KAB. KEP. TANIMBAR', {noHide: true, offset: [-72,-10], }).addTo(map);
+        L.marker([-8.1439268,127.7812751],{opacity:0.01}).bindLabel('KAB. MBD', {noHide: true, offset: [-42,-10], }).addTo(map);
+        L.marker([-3.3054009,128.9569751],{opacity:0.01}).bindLabel('KAB. MALUKU TENGAH', {noHide: true, offset: [-42,-10], }).addTo(map);
+        L.marker([-5.8830139,132.7284609],{opacity:0.01}).bindLabel('KAB. MALUKU TENGGARA', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-3.0591965,128.1815531],{opacity:0.01}).bindLabel('KAB. SBB', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-3.1096585,130.4897502],{opacity:0.01}).bindLabel('KAB. SBT', {noHide: true, offset: [-22,-5], }).addTo(map);
+        L.marker([-3.6933882,128.1810017],{opacity:0.01}).bindLabel('KOTA AMBON', {noHide: true, offset: [-22,-5], }).addTo(map);
+        L.marker([-5.5618696,132.7455933],{opacity:0.01}).bindLabel('KOTA TUAL', {noHide: true, offset: [-22,-5], }).addTo(map);
+        // marker.bindTooltip("My Label");
 
         
         

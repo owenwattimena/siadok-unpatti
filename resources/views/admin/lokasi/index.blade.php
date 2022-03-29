@@ -6,6 +6,8 @@
 <!-- Leaftlet Js -->
 <link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.css" />
 <link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+<link rel="stylesheet" href="{{ asset('assets/dist/css/leafletjs-label.css') }}">
+
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 <style>
@@ -174,11 +176,13 @@
                             <td>{{ $item->keterangan ?? '-'}}</td>
                             <td>
                                 <button onclick="mapEdit(`{{ $item->latitude }}`, `{{ $item->longitude }}`, `{{ $key }}`)" class="btn btn-sm bg-orange" data-toggle="modal" data-target="#modal-default-{{ $key }}"><i class="fa fa-edit"></i> Ubah</button>
+                                @if(count($item->alumni) <= 0)
                                 <form action="{{ route('lokasi.delete', $item->id) }}" style="display: inline;" method="POST">
                                     @csrf
                                     @method('delete')
                                     <button type="submit" class="btn btn-sm bg-red" onclick="return confirm('Yakin ingin menghapus lokasi {{ $item->nama }}?')"><i class="fa fa-trash"></i> Hapus</button>
                                 </form>
+                                @endif
                             </td>
                         </tr>
                         <div class="modal fade" id="modal-default-{{ $key }}">
@@ -249,6 +253,8 @@
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.js"></script>
 <script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+<script src="{{ asset('assets/dist/js/leafletjs-label.js') }}"></script>
+
 <!-- DataTables -->
 <script src="{{ asset('assets') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('assets') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
@@ -278,6 +284,17 @@
             layers: [base_layer],
         }).setView([lat, lng]);
         map.addControl(new L.Control.Fullscreen())
+        L.marker([-3.3163733, 126.5720491],{opacity:0.01}).bindLabel('KAB. BURU', {noHide: true, offset: [-42,-40], }).addTo(map);
+        L.marker([-3.600275,126.6161067],{opacity:0.01}).bindLabel('KAB. BURU SELATAN', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-6.161061,134.4254625],{opacity:0.01}).bindLabel('KAB. KEP. ARU', {noHide: true, offset: [-52,-10], }).addTo(map);
+        L.marker([-7.4597688,131.4123121],{opacity:0.01}).bindLabel('KAB. KEP. TANIMBAR', {noHide: true, offset: [-72,-10], }).addTo(map);
+        L.marker([-8.1439268,127.7812751],{opacity:0.01}).bindLabel('KAB. MBD', {noHide: true, offset: [-42,-10], }).addTo(map);
+        L.marker([-3.3054009,128.9569751],{opacity:0.01}).bindLabel('KAB. MALUKU TENGAH', {noHide: true, offset: [-42,-10], }).addTo(map);
+        L.marker([-5.6630139,132.7284609],{opacity:0.01}).bindLabel('KAB. MALUKU TENGGARA', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-3.0591965,128.1815531],{opacity:0.01}).bindLabel('KAB. SBB', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-3.1096585,130.4897502],{opacity:0.01}).bindLabel('KAB. SBT', {noHide: true, offset: [-22,-5], }).addTo(map);
+        L.marker([-3.6933882,128.1810017],{opacity:0.01}).bindLabel('KOTA AMBON', {noHide: true, offset: [-22,-5], }).addTo(map);
+        L.marker([-5.6318696,132.7455933],{opacity:0.01}).bindLabel('KOTA TUAL', {noHide: true, offset: [-22,-5], }).addTo(map);
         var marker;
         marker = L.marker({
             lat:lat, lng:lng
@@ -318,6 +335,17 @@
             layers: [base_layer],
         }).setView([-6.0251815, 131.1685883]);
         map.addControl(new L.Control.Fullscreen())
+        L.marker([-3.3163733, 126.5720491],{opacity:0.01}).bindLabel('KAB. BURU', {noHide: true, offset: [-42,-40], }).addTo(map);
+        L.marker([-3.600275,126.6161067],{opacity:0.01}).bindLabel('KAB. BURU SELATAN', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-6.161061,134.4254625],{opacity:0.01}).bindLabel('KAB. KEP. ARU', {noHide: true, offset: [-52,-10], }).addTo(map);
+        L.marker([-7.4597688,131.4123121],{opacity:0.01}).bindLabel('KAB. KEP. TANIMBAR', {noHide: true, offset: [-72,-10], }).addTo(map);
+        L.marker([-8.1439268,127.7812751],{opacity:0.01}).bindLabel('KAB. MBD', {noHide: true, offset: [-42,-10], }).addTo(map);
+        L.marker([-3.3054009,128.9569751],{opacity:0.01}).bindLabel('KAB. MALUKU TENGAH', {noHide: true, offset: [-42,-10], }).addTo(map);
+        L.marker([-5.6630139,132.7284609],{opacity:0.01}).bindLabel('KAB. MALUKU TENGGARA', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-3.0591965,128.1815531],{opacity:0.01}).bindLabel('KAB. SBB', {noHide: true, offset: [-62,-10], }).addTo(map);
+        L.marker([-3.1096585,130.4897502],{opacity:0.01}).bindLabel('KAB. SBT', {noHide: true, offset: [-22,-5], }).addTo(map);
+        L.marker([-3.6933882,128.1810017],{opacity:0.01}).bindLabel('KOTA AMBON', {noHide: true, offset: [-22,-5], }).addTo(map);
+        L.marker([-5.6318696,132.7455933],{opacity:0.01}).bindLabel('KOTA TUAL', {noHide: true, offset: [-22,-5], }).addTo(map);
         var marker;
         map.on('click', function(e){
             if (marker != undefined) {

@@ -7,9 +7,9 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel">
             <div class="info" style="position: static; text-align: center">
-                <p>{{ \Auth::user()->name }}</p>
+                <p><i class="fa fa-user-circle"></i> {{ \Auth::user()->name }}</p>
                 <!-- Status -->
-                <a href="#"><i class="fa fa-circle text-success"></i> {{ \Auth::user()->email }}</a>
+                {{-- <a href="#"><i class="fa fa-circle text-success"></i> {{ \Auth::user()->email }}</a> --}}
             </div>
         </div>
 
