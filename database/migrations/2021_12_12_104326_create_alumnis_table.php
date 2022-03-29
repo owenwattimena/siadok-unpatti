@@ -19,13 +19,13 @@ class CreateAlumnisTable extends Migration
             $table->integer('entry_year');
             $table->integer('graduation_year');
             $table->unsignedBigInteger('city_id');
-            $table->unsignedBigInteger('workplace_id');
+            $table->unsignedBigInteger('workpelace_id');
             $table->longText('previous_job')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('city_id')->references('id')->on('cities');
-            $table->foreign('workplace_id')->references('id')->on('workplaces');
+            $table->foreign('workpelace_id')->references('id')->on('workpleaces');
         });
     }
 
