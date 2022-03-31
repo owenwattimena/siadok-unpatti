@@ -5,34 +5,29 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\AlertFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Lokasi;
+use App\Services\CityServices;
 use Illuminate\Http\Request;
 
 class LokasiController extends Controller
 {
     public function index()
     {
-        $lokasi = Lokasi::all();
+        $lokasi = CityServices::getCities();
         $data['lokasi'] = $lokasi;
-        return view('admin.lokasi.index',$data);
+        return view('admin.city.index',$data);
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'lokasi' => 'required',
+            'city' => 'required',
         ]);
 
-        $lokasi = new Lokasi;
-        $lokasi->nama = $request->lokasi;
-        $lokasi->latitude = $request->latitude;
-        $lokasi->longitude = $request->longitude;
-        $lokasi->keterangan = $request->keterangan;
-
-        if($lokasi->save())
+        if(CityServices::storeCity($request))
         {
-            return redirect()->back()->with(AlertFormatter::success('Data Lokasi Berhasil Ditambahkan'));
+            return redirect()->back()->with(AlertFormatter::success('Data Kota/Kabupaten Ditambahkan'));
         }
-        return redirect()->back()->with(AlertFormatter::danger('Data Lokasi Gagal Ditambahkan'));
+        return redirect()->back()->with(AlertFormatter::danger('Data Kota/Kabupaten Gagal Ditambahkan'));
     }
 
     public function update(Request $request, $id)

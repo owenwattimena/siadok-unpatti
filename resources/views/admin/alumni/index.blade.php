@@ -1,79 +1,14 @@
-
 @extends('admin.templates.template')
 
 @section('style')
 
 <!-- Leaftlet Js -->
-<link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.css" />
-<link href='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css' rel='stylesheet' />
+@include('assets.css.leaflet')
 <!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
-<style>
-    .modal {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        overflow: hidden;
-    }
-    
-    .modal-dialog {
-        position: fixed;
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        padding: 0;
-    }
-    
-    .modal-content {
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        border: 2px solid #3c7dcf;
-        border-radius: 0;
-        box-shadow: none;
-    }
-    
-    .modal-header {
-        position: absolute;
-        top: 0;
-        right: 0;
-        left: 0;
-        height: 50px;
-        padding: 10px;
-        background: #3c8dbc;
-        border: 0;
-    }
-    
-    .modal-title {
-        font-weight: 300;
-        font-size: 2em;
-        color: #fff;
-        line-height: 30px;
-    }
-    
-    .modal-body {
-        position: absolute;
-        top: 50px;
-        bottom: 60px;
-        width: 100%;
-        font-weight: 300;
-        overflow: auto;
-    }
-    
-    .modal-footer {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        height: 60px;
-        padding: 10px;
-        background: #f1f3f5;
-    }
-</style>
+<!-- Select2 -->
+{{-- <link rel="stylesheet" href="{{ asset('assets/bower_components/select2/dist/css/select2.min.css') }}"> --}}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 @endsection
 
 @section('body')
@@ -91,105 +26,60 @@
             <li class="active">Alumni</li>
         </ol>
     </section>
-    
+
     <!-- Main content -->
     <section class="content container-fluid">
         @if (session('status'))
-            <div class="alert alert-{!! session('status') !!} alert-dismissible" role="alert">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                        aria-hidden="true">&times;</span></button>
-                {!! session('message') !!}
-            </div>
+        <div class="alert alert-{!! session('status') !!} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {!! session('message') !!}
+        </div>
         @endif
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Daftar Alumni</h3>
-                <button class="btn btn-sm bg-blue" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Tambah</button>
-                <div class="modal fade" id="modal-default">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <form action="{{ route('alumni.store') }}" method="post" class="form-horizontal">
-                                @csrf
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <h4 class="modal-title">Tambah Alumni</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label for="nama" class="col-sm-2 control-label">Nama</label>
-                                        <div class="col-sm-10">
-                                          <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="angkatan" class="col-sm-2 control-label">Tahun Angkatan</label>
-                                        <div class="col-sm-10">
-                                          <input type="number" min="2000" max="3000" class="form-control" id="angkatan" name="angkatan" placeholder="angkatan">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="lokasi_id" class="col-sm-2 control-label">Lokasi</label>
-                                        <div class="col-sm-10">
-                                            <select min="2000" max="3000" class="form-control" id="lokasi_id" name="lokasi_id">
-                                                <option>---pilih lokasi---</option>
-                                                @foreach ($lokasi as $item)
-                                                <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="tempat_kerja" class="col-sm-2 control-label">Tempat Kerja</label>
-                                        <div class="col-sm-10">
-                                          <input type="text" class="form-control" id="tempat_kerja" name="tempat_kerja" placeholder="Tempat Kerja">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Keluar</button>
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
-                                </div>                                
-                            </form>
-                        </div>
-                        <!-- /.modal-content -->
-                    </div>
-                    <!-- /.modal-dialog -->
-                </div>
-                <!-- /.modal -->    
+                <button class="btn btn-sm bg-blue pull-right" onclick="createMode()" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Tambah</button>
+                @include('admin.alumni.component.create_modal')
+                <!-- /.modal -->
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-                <table id="example1" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th style="width: 30px">#</th>
-                            <th>Nama</th>
-                            <th>Tahun Angkatan</th>
-                            <th>Lokasi</th>
-                            <th>Tempat Kerja</th>
-                            <th>Pilihan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($alumni as $key => $item)
-                        <tr>
-                            <td>{{ ++$key }}</td>
-                            <td>{{ $item->nama }}</td>
-                            <td>{{ $item->angkatan }}</td>
-                            <td>{{ $item->lokasi->nama }}</td>
-                            <td>{{ $item->tempat_kerja}}</td>
-                            <td>
-                                <button class="btn btn-sm bg-orange" data-toggle="modal" data-target="#modal-default-{{ $key }}"><i class="fa fa-edit"></i> Ubah</button>
-                                <form action="{{ route('alumni.delete', $item->id) }}" style="display: inline;" method="POST">
-                                    @csrf
-                                    @method('delete')
-                                    <button type="submit" class="btn btn-sm bg-red" onclick="return confirm('Yakin ingin menghapus alumni {{ $item->nama }}?')"><i class="fa fa-trash"></i> Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <div class="modal fade" id="modal-default-{{ $key }}">
+                <div class="table-responsive">
+
+                    <table id="example1" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">#</th>
+                                <th>NIM</th>
+                                <th>NAMA</th>
+                                <th>TAHUN MASUK</th>
+                                <th>TAHUN LULUS</th>
+                                <th>TEMPAT KERJA</th>
+                                <th>KOTA</th>
+                                <th>AKSI</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($alumni as $key => $item)
+                            <tr>
+                                <td>{{ ++$key }}</td>
+                                <td>{{ $item->nim }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->entry_year ?? '-' }}</td>
+                                <td>{{ $item->graduation_year ?? '-'}}</td>
+                                <td>{{ $item->workplace_name ?? '-'}}</td>
+                                <td>{{ $item->city_name ?? '-'}}</td>
+                                <td>
+                                    <button class="btn btn-sm bg-blue" onclick="return detailMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-list"></i> Detail</button>
+                                    <button class="btn btn-sm bg-orange" onclick="return updateMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
+                                    <form action="{{ route('alumni.delete', $item->id) }}" style="display: inline;" method="POST">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="btn btn-sm bg-red" onclick="return confirm('Yakin ingin menghapus alumni {{ $item->name }}?')"><i class="fa fa-trash"></i> Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {{-- <div class="modal fade" id="modal-default-{{ $key }}">
                             <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <form action="{{ route('alumni.update', $item->id) }}" method="POST">
@@ -205,13 +95,13 @@
                                             <div class="form-group">
                                                 <label for="nama" class="col-sm-2 control-label">Nama</label>
                                                 <div class="col-sm-10">
-                                                  <input type="text" class="form-control" id="nama" name="nama" value="{{ $item->nama }}" placeholder="Nama">
+                                                    <input type="text" class="form-control" id="nama" name="nama" value="{{ $item->nama }}" placeholder="Nama">
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label for="angkatan" class="col-sm-2 control-label">Tahun Angkatan</label>
                                                 <div class="col-sm-10">
-                                                  <input type="number" min="2000" max="3000" class="form-control" id="angkatan" name="angkatan" value="{{ $item->angkatan }}" placeholder="angkatan">
+                                                    <input type="number" min="2000" max="3000" class="form-control" id="angkatan" name="angkatan" value="{{ $item->angkatan }}" placeholder="angkatan">
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -220,7 +110,7 @@
                                                     <select min="2000" max="3000" class="form-control" id="lokasi_id" name="lokasi_id">
                                                         <option>---pilih lokasi---</option>
                                                         @foreach ($lokasi as $value)
-                                                        <option value="{{ $value->id }}"  {{ $value->id == $item->lokasi_id ? 'selected' : '' }}>{{ $value->nama }}</option>
+                                                        <option value="{{ $value->id }}" {{ $value->id == $item->lokasi_id ? 'selected' : '' }}>{{ $value->nama }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -228,40 +118,41 @@
                                             <div class="form-group">
                                                 <label for="tempat_kerja" class="col-sm-2 control-label">Tempat Kerja</label>
                                                 <div class="col-sm-10">
-                                                  <input type="text" class="form-control" id="tempat_kerja" name="tempat_kerja" value="{{ $item->tempat_kerja }}" placeholder="Tempat Kerja">
+                                                    <input type="text" class="form-control" id="tempat_kerja" name="tempat_kerja" value="{{ $item->tempat_kerja }}" placeholder="Tempat Kerja">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Keluar</button>
                                             <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
-                                        </div>                                
+                                        </div>
                                     </form>
                                 </div>
                                 <!-- /.modal-content -->
                             </div>
                             <!-- /.modal-dialog -->
-                        </div>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th>#</th>
-                            <th>Nama</th>
-                            <th>Tahun Angkatan</th>
-                            <th>Lokasi</th>
-                            <th>Tempat Kerja</th>
-                            <th>Pilihan</th>
-                        </tr>
-                    </tfoot>
+                </div> --}}
+                @endforeach
+                </tbody>
+                {{-- <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>Nama</th>
+                                <th>Tahun Angkatan</th>
+                                <th>Lokasi</th>
+                                <th>Tempat Kerja</th>
+                                <th>Pilihan</th>
+                            </tr>
+                        </tfoot> --}}
                 </table>
             </div>
-            <!-- /.box-body -->
         </div>
-        <!-- /.box -->
-        
-    </section>
-    <!-- /.content -->
+        <!-- /.box-body -->
+</div>
+<!-- /.box -->
+
+</section>
+<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
@@ -270,15 +161,258 @@
 @section('script')
 
 <!-- Leaftlet JS -->
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.js"></script>
-<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js'></script>
+@include('assets.js.leaflet')
 <!-- DataTables -->
 <script src="{{ asset('assets') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
 <script src="{{ asset('assets') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<!-- select2 -->
+{{-- <script src="{{ asset('assets/bower_components/select2/dist/js/select2.full.min.js') }}"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<!-- ajaxPost -->
+<script src="{{ asset('assets/app-js/appAjax.js') }}"></script>
+<script src="{{ asset('assets/app-js/markerKabMaluku.js') }}"></script>
 <script>
-    $(document).ready(function(){
+    let map;
+    var marker;
+    let mapDisable = false;
+    $(document).ready(function() {
         $('#example1').DataTable();
+        @if($errors->any())
+        setTimeout(function() {
+            $('#modal-default').modal('show');
+        }, 400);
+        @endif
+        showCityMap(false);
+        initMap();
+        $('#workplace').select2({
+            placeholder: "--- Masukan Tempat Kerja ---",
+            tags: [],
+            ajax: {
+                type: 'GET',
+                url: `{{ url('api/v1/select2workplace') }}`,
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        workplace: params.term
+                    }
+                    // Query parameters will be ?workplace=[term]
+                    return query;
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
     })
+
+    $('#workplace').on('select2:select', function(e) {
+        showCityMap();
+        var data = e.params.data;
+        if (Number.isInteger(data.id)) {
+            var ajax = ajaxGet(`{{ url('api/v1/workplace?id=') }}${data.id}`);
+            ajax.done(function(response) {
+                // console.log(response)
+                $('#city_id').val(response.city_id)
+                $('#latitude').val(response.latitude)
+                $('#longitude').val(response.longitude)
+                $('#latitude').trigger("change");
+                $('#longitude').trigger("change");
+            });
+        }
+    })
+
+    function disableForm(state) {
+        $('form input').prop("disabled", state);
+        $('form textarea').prop("disabled", state);
+        $('form select').prop("disabled", state);
+        if (state) {
+            $('.modal-footer').hide();
+        } else {
+            $('.modal-footer').show();
+        }
+    }
+
+    function showPasswordFiled(state = true) {
+        if (state) {
+            $("#password").show();
+            $("#password_confirmation").show();
+            $('label[for=password]').show();
+            $('label[for=password_confirmation]').show();
+        } else {
+            $("#password").hide();
+            $("#password_confirmation").hide();
+            $('label[for=password]').hide();
+            $('label[for=password_confirmation]').hide();
+        }
+    }
+
+    function showCityMap(state = true) {
+        if (state) {
+            $('label[for=city_id]').show();
+            $('#city_id').show();
+            $('label[for=workplace]').show();
+            $('#workplace').show();
+            $('label[for=map]').show();
+            $('#latitude').show();
+            $('#longitude').show();
+            $('#map').css('opacity', '1');
+        } else {
+            $('label[for=city_id]').hide();
+            $('#city_id').hide();
+            $('label[for=workplace]').hide();
+            $('#workplace').hide();
+            $('label[for=map]').hide();
+            $('#latitude').hide();
+            $('#longitude').hide();
+            $('#map').css('opacity', '0');
+        }
+    }
+
+    function initMap() {
+        disableForm(false);
+        var base_layer, mbAttr, mbUrl;
+
+        mbAttr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+
+        mbUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+
+        base_layer = L.tileLayer(mbUrl, {
+            id: 'mapbox.streets'
+            , attribution: mbAttr
+            , minZoom: 6
+        , });
+
+        map = L.map('map', {
+            center: [30, 0]
+            , zoom: 7
+            , layers: [base_layer]
+        , }).setView([-6.0251815, 131.1685883]);
+        map.addControl(new L.Control.Fullscreen())
+        markerKabMaluku(map);
+        /// OnClick on Map set value to latitude and longitude
+        map.on('click', function(e) {
+            if (mapDisable) {
+                return;
+            }
+            if (marker != undefined) {
+                map.removeLayer(marker);
+            };
+            marker = L.marker(e.latlng).addTo(map);
+            let lat = e.latlng.lat;
+            let lng = e.latlng.lng;
+            $('#latitude').val(lat);
+            $('#longitude').val(lng);
+        });
+        /// fix map view on modal dialog
+        $('#modal-default').on('show.bs.modal', function() {
+            setTimeout(function() {
+                map.invalidateSize()
+            }, 400);
+        });
+
+        // set latitude from latitude form filed to map
+        $('#latitude').change(function(e) {
+            let lat = $('#latitude').val();
+            let lng = $('#longitude').val();
+            if (marker != undefined) {
+                map.removeLayer(marker);
+            };
+            marker = L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 16);
+        });
+        // set longitude from longitude form filed to map
+        $('#longitude').change(function(e) {
+            let lat = $('#latitude').val();
+            let lng = $('#longitude').val();
+            if (marker != undefined) {
+                map.removeLayer(marker);
+            };
+            marker = L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 16);
+        });
+    }
+
+    function detailMode(nim) {
+        $('.modal-title').text('Detail Alumni');
+        disableForm(true)
+        showCityMap();
+        mapDisable = true
+        map.dragging.disable();
+        showPasswordFiled(false);
+        var ajax = ajaxGet(`{{ url('api/v1/alumni?nim=') }}${nim}`);
+        ajax.done(function(result) {
+            setFormValue(result);
+        });
+    }
+
+    function setFormValue(data) {
+        var workplace = $('#workplace');
+        if (data != null) {
+            $("#name").val(data.name);
+            $("#nim").val(data.nim);
+            $("#email").val(data.email);
+            $("#entry_year").val(data.entry_year);
+            $("#graduation_year").val(data.graduation_year);
+            $("#previous_job").val(data.previous_job);
+            if(data.workplace_name != null){
+                var option = new Option(data.workplace_name, data.workplace_id, true, true);
+                workplace.append(option).trigger('change');
+            }else{
+                var option = new Option('-', '-', true, true);
+                workplace.append(option).trigger('change');
+            }
+            if(data.city_id != null){
+                $('#city_id').val(data.city_id);
+            }else{
+                $('#city_id').val('-');
+            }
+            $("#latitude").val(data.latitude);
+            $("#longitude").val(data.longitude);
+            $("#latitude").trigger("change");
+            $("#longitude").trigger("change");
+        } else {
+            $("#name").val('');
+            $("#nim").val('');
+            $("#email").val('');
+            $("#entry_year").val('');
+            $("#graduation_year").val('');
+            $("#previous_job").val('');
+            var option = new Option('', '', true, true);
+            workplace.append(option).trigger('change');
+            $('#city_id').val('');
+            $("#latitude").val(null);
+            $("#longitude").val(null);
+            map.removeLayer(marker);
+        }
+    }
+
+    function createMode() {
+        $('.modal-title').text('Tambah Alumni');
+        $('form').attr('action', `{{ url('alumni') }}`);
+        $('input[name=_method]').val('POST');
+        disableForm(false)
+        showCityMap(false);
+        mapDisable = false
+        map.dragging.enable();
+        showPasswordFiled();
+        setFormValue();
+    }
+    function updateMode(nim) {
+        $('form').attr('action', `{{ url('alumni') }}/${nim}`);
+        $('input[name=_method]').val('PUT');
+        $('.modal-title').text('Update Alumni');
+        disableForm(false)
+        showCityMap(true);
+        mapDisable = false;
+        map.dragging.enable();
+        showPasswordFiled(false);
+        var ajax = ajaxGet(`{{ url('api/v1/alumni?nim=') }}${nim}`);
+        ajax.done(function(result) {
+            setFormValue(result);
+        });
+    }
+
 </script>
 @endsection

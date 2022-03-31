@@ -10,7 +10,7 @@ class Lokasi extends Model
 {
     use HasFactory;
 
-    protected $table = 'lokasi';
+    protected $table = 'cities';
 
     /**
      * Get all of the alumni for the Lokasi
@@ -19,6 +19,6 @@ class Lokasi extends Model
      */
     public function alumni()
     {
-        return $this->hasMany(Alumni::class, 'lokasi_id', 'id');
+        // return $this->hasMany(Alumni::class, 'lokasi_id', 'id');
     }
 }

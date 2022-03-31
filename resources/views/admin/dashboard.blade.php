@@ -7,22 +7,32 @@
 {{-- <link rel="stylesheet" href="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.css" /> --}}
 @include('assets.css.leaflet')
 <style>
-    #map { height: 650px; }
-    .leaflet-popup-content-wrapper{
+    #map {
+        height: 650px;
+        width: 100%;
+    }
+
+    .leaflet-popup-content-wrapper {
         border-radius: 0;
     }
-    .leaflet-popup-content{
+
+    .leaflet-popup-content {
         margin: 0;
     }
-    .box-widget{
+
+    .box-widget {
         width: 300px;
     }
-    .leaflet-popup-content .widget-user-2{
-        margin-bottom: 0px!important;
+
+    .leaflet-popup-content .widget-user-2 {
+        margin-bottom: 0px !important;
     }
-    .widget-user-desc, .widget-user-username{
-        margin-left: 0!important;
+
+    .widget-user-desc,
+    .widget-user-username {
+        margin-left: 0 !important;
     }
+
 </style>
 @endsection
 
@@ -40,41 +50,58 @@
             <li class="active"><i class="fa fa-map"></i> Map</li>
         </ol>
     </section>
-    
+
     <!-- Main content -->
     <section class="content container-fluid">
-        
-        <div id="map" class="map">
-
-            <div class="modal fade" id="modal-dialog">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title">Default Modal</h4>
+        <div class="row">
+            <div class="col-md-2">
+                <div class="box widget-user-2">
+                    <div class="box-heade text-center">
+                        <h5><strong>TAHUN MASUK</strong></h5>
                     </div>
-                    <div class="modal-body">
-                        <table class="table table-striped">
-                            <tr>
-                              <th style="width: 10px">#</th>
-                              <th>Nama</th>
-                              <th>Tempat Kerja</th>
-                            </tr>
-                            <tbody id="tbody"></tbody>
-                          </table>
+                    <div class="box-footer no-padding">
+                        <ul class="nav nav-stacked">
+                            <li><a href="#">2016 <span class="pull-right badge bg-green">31</span></a></li>
+                            <li><a href="#">2017 <span class="pull-right badge bg-green">5</span></a></li>
+                            <li><a href="#">2018 <span class="pull-right badge bg-green">12</span></a></li>
+                            <li><a href="#">2019 <span class="pull-right badge bg-green">842</span></a></li>
+                        </ul>
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Kembali</button>
-                    </div>
-                  </div>
-                  <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-dialog -->
-              </div>
-              <!-- /.modal -->
+
+            </div>
+            <div class="col-md-10">
+                <div id="map" class="map">
+                    <div class="modal fade" id="modal-dialog">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">Default Modal</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-striped">
+                                        <tr>
+                                            <th style="width: 10px">#</th>
+                                            <th>Nama</th>
+                                            <th>Tempat Kerja</th>
+                                        </tr>
+                                        <tbody id="tbody"></tbody>
+                                    </table>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Kembali</button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+                </div>
+            </div>
         </div>
-        
     </section>
     <!-- /.content -->
 </div>
@@ -92,7 +119,7 @@
         var icon = L.icon({
             iconUrl: `{{ asset('assets/dist/img/pin-star.png') }}`,
 
-            iconSize:     [20, 20], // size of the icon
+            iconSize: [20, 20], // size of the icon
             // shadowSize:   [50, 64], // size of the shadow
             // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
             // shadowAnchor: [4, 62],  // the same for the shadow
@@ -101,54 +128,110 @@
 
         var lokasi = @json($lokasi);
         var base_layer, map, mbAttr, mbUrl;
-        
+
         mbAttr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
-        
+
         // mbUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         mbUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-        
+
         base_layer = L.tileLayer(mbUrl, {
-            id: 'mapbox.streets',
-            attribution: mbAttr,
-            minZoom: 6,
-        });
-        
+            id: 'mapbox.streets'
+            , attribution: mbAttr
+            , minZoom: 6
+        , });
+
         map = L.map('map', {
-            center: [30, 0],
-            zoom: 7,
-            layers: [base_layer],
-        }).setView([-6.0251815, 131.1685883]);
+            center: [30, 0]
+            , zoom: 7
+            , layers: [base_layer]
+        , }).setView([-6.0251815, 131.1685883]);
         map.addControl(new L.Control.Fullscreen())
-        L.marker([-3.3163733, 126.5720491],{opacity:0.01}).bindLabel('KAB. BURU', {noHide: true, offset: [-42,-40], }).addTo(map);
-        L.marker([-3.600275,126.6161067],{opacity:0.01}).bindLabel('KAB. BURU SELATAN', {noHide: true, offset: [-62,-10], }).addTo(map);
-        L.marker([-6.161061,134.4254625],{opacity:0.01}).bindLabel('KAB. KEP. ARU', {noHide: true, offset: [-52,-10], }).addTo(map);
-        L.marker([-7.4597688,131.4123121],{opacity:0.01}).bindLabel('KAB. KEP. TANIMBAR', {noHide: true, offset: [-72,-10], }).addTo(map);
-        L.marker([-8.1439268,127.7812751],{opacity:0.01}).bindLabel('KAB. MBD', {noHide: true, offset: [-42,-10], }).addTo(map);
-        L.marker([-3.3054009,128.9569751],{opacity:0.01}).bindLabel('KAB. MALUKU TENGAH', {noHide: true, offset: [-42,-10], }).addTo(map);
-        L.marker([-5.8830139,132.7284609],{opacity:0.01}).bindLabel('KAB. MALUKU TENGGARA', {noHide: true, offset: [-62,-10], }).addTo(map);
-        L.marker([-3.0591965,128.1815531],{opacity:0.01}).bindLabel('KAB. SBB', {noHide: true, offset: [-62,-10], }).addTo(map);
-        L.marker([-3.1096585,130.4897502],{opacity:0.01}).bindLabel('KAB. SBT', {noHide: true, offset: [-22,-5], }).addTo(map);
-        L.marker([-3.6933882,128.1810017],{opacity:0.01}).bindLabel('KOTA AMBON', {noHide: true, offset: [-22,-5], }).addTo(map);
-        L.marker([-5.5618696,132.7455933],{opacity:0.01}).bindLabel('KOTA TUAL', {noHide: true, offset: [-22,-5], }).addTo(map);
+        L.marker([-3.3163733, 126.5720491], {
+            opacity: 0.01
+        }).bindLabel('KAB. BURU', {
+            noHide: true
+            , offset: [-42, -40]
+        , }).addTo(map);
+        L.marker([-3.600275, 126.6161067], {
+            opacity: 0.01
+        }).bindLabel('KAB. BURU SELATAN', {
+            noHide: true
+            , offset: [-62, -10]
+        , }).addTo(map);
+        L.marker([-6.161061, 134.4254625], {
+            opacity: 0.01
+        }).bindLabel('KAB. KEP. ARU', {
+            noHide: true
+            , offset: [-52, -10]
+        , }).addTo(map);
+        L.marker([-7.4597688, 131.4123121], {
+            opacity: 0.01
+        }).bindLabel('KAB. KEP. TANIMBAR', {
+            noHide: true
+            , offset: [-72, -10]
+        , }).addTo(map);
+        L.marker([-8.1439268, 127.7812751], {
+            opacity: 0.01
+        }).bindLabel('KAB. MBD', {
+            noHide: true
+            , offset: [-42, -10]
+        , }).addTo(map);
+        L.marker([-3.3054009, 128.9569751], {
+            opacity: 0.01
+        }).bindLabel('KAB. MALUKU TENGAH', {
+            noHide: true
+            , offset: [-42, -10]
+        , }).addTo(map);
+        L.marker([-5.8830139, 132.7284609], {
+            opacity: 0.01
+        }).bindLabel('KAB. MALUKU TENGGARA', {
+            noHide: true
+            , offset: [-62, -10]
+        , }).addTo(map);
+        L.marker([-3.0591965, 128.1815531], {
+            opacity: 0.01
+        }).bindLabel('KAB. SBB', {
+            noHide: true
+            , offset: [-62, -10]
+        , }).addTo(map);
+        L.marker([-3.1096585, 130.4897502], {
+            opacity: 0.01
+        }).bindLabel('KAB. SBT', {
+            noHide: true
+            , offset: [-22, -5]
+        , }).addTo(map);
+        L.marker([-3.6933882, 128.1810017], {
+            opacity: 0.01
+        }).bindLabel('KOTA AMBON', {
+            noHide: true
+            , offset: [-22, -5]
+        , }).addTo(map);
+        L.marker([-5.5618696, 132.7455933], {
+            opacity: 0.01
+        }).bindLabel('KOTA TUAL', {
+            noHide: true
+            , offset: [-22, -5]
+        , }).addTo(map);
         // marker.bindTooltip("My Label");
 
-        
-        
-        for(var key in lokasi){
+
+
+        for (var key in lokasi) {
             var data = lokasi[key];
             let latitude = data.latitude;
             let longitude = data.longitude;
             // map.panBy([0, 3500]);
-            L.marker([latitude, longitude], {icon:icon})
+            L.marker([latitude, longitude], {
+                    icon: icon
+                })
                 .bindPopup(card(data.lokasi, data.angkatan))
                 .addTo(map);
-            
+
         }
 
     }).call(this);
 
-    function card(lokasi, angkatan)
-    {
+    function card(lokasi, angkatan) {
         var divBoxWidget = document.createElement('div')
         var divWidgetUserHeader = document.createElement('div')
         var divBoxFooter = document.createElement('div')
@@ -163,26 +246,26 @@
         divBoxWidget.appendChild(divBoxFooter)
         divBoxFooter.appendChild(ulNav)
 
-        if(Object.keys(angkatan).length > 0){
-            for(var key in angkatan){
+        if (Object.keys(angkatan).length > 0) {
+            for (var key in angkatan) {
                 if (Object.hasOwnProperty.call(angkatan, key)) {
-                var data = JSON.stringify(angkatan[key]);
-                var li = document.createElement('li')
-                li.dataset.lokasi = lokasi
-                li.dataset.angkatan = key 
-                li.dataset.alumni = data 
-                li.dataset.toggle = 'modal'
-                li.dataset.target = '#modal-dialog'
-                li.innerHTML = `<a href="#">${key} <span class="pull-right badge bg-blue">${angkatan[key].length} Orang</span></a>`;
-                // card += el;
-                li.onclick=function(){
-                    showDetail(this.dataset.lokasi, this.dataset.alumni, this.dataset.angkatan)
-                }
+                    var data = JSON.stringify(angkatan[key]);
+                    var li = document.createElement('li')
+                    li.dataset.lokasi = lokasi
+                    li.dataset.angkatan = key
+                    li.dataset.alumni = data
+                    li.dataset.toggle = 'modal'
+                    li.dataset.target = '#modal-dialog'
+                    li.innerHTML = `<a href="#">${key} <span class="pull-right badge bg-blue">${angkatan[key].length} Orang</span></a>`;
+                    // card += el;
+                    li.onclick = function() {
+                        showDetail(this.dataset.lokasi, this.dataset.alumni, this.dataset.angkatan)
+                    }
 
-                ulNav.appendChild(li)
+                    ulNav.appendChild(li)
                 }
             }
-        }else{
+        } else {
             var li = document.createElement('li')
             li.style.textAlign = 'center'
             li.style.padding = "50px 15px"
@@ -218,30 +301,30 @@
         //   </div>`;
         //   return el;
     }
-    function _click(e)
-    {
+
+    function _click(e) {
         console.log(e);
     }
 
 
-    function showDetail(lokasi, alumni, angkatan)
-    {
+    function showDetail(lokasi, alumni, angkatan) {
         var tbody = '';
         alumni = JSON.parse(alumni)
         for (key in alumni) {
             if (Object.hasOwnProperty.call(alumni, key)) {
                 console.log(alumni)
                 const element = alumni[key];
-                tbody += 
-                `<tr>
+                tbody +=
+                    `<tr>
                     <td>${++key}</td>
                     <td>${element.nama}</td>
                     <td>${element.tempat_kerja}</td>
-                </tr>`; 
+                </tr>`;
             }
         }
-        $('#tbody').html(tbody); 
+        $('#tbody').html(tbody);
         $('.modal-title').text(lokasi + ' - Angkatan ' + angkatan);
     }
+
 </script>
 @endsection

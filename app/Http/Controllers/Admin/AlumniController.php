@@ -7,13 +7,15 @@ use App\Models\Lokasi;
 use Illuminate\Http\Request;
 use App\Helpers\AlertFormatter;
 use App\Http\Controllers\Controller;
+use App\Services\AlumniServices;
+use App\Services\CityServices;
 
 class AlumniController extends Controller
 {
     public function index()
     {
-        $alumni = Alumni::all();
-        $lokasi = Lokasi::all();
+        $alumni = AlumniServices::getAlumnus();
+        $lokasi = CityServices::getCities();
         $data['alumni'] = $alumni;
         $data['lokasi'] = $lokasi;
         return view('admin.alumni.index', $data);
@@ -22,41 +24,31 @@ class AlumniController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required',
-            'angkatan' => 'required|numeric',
-            'lokasi_id' => 'required|numeric',
-            'tempat_kerja' => 'required',
+            'name' => 'required',
+            'nim' => 'required|numeric',
+            'password' => 'required|confirmed',
+            'email' => 'required|string|email|max:255|unique:users,email,'. auth()->user()->id,
         ]);
-
-        $alumni                 = new Alumni;
-        $alumni->nama           = $request->nama;
-        $alumni->angkatan       = $request->angkatan;
-        $alumni->lokasi_id      = $request->lokasi_id;
-        $alumni->tempat_kerja   = $request->tempat_kerja;
-
-        if($alumni->save())
+        $result = AlumniServices::storeAlumni($request);
+        if($result['status'] == 'success')
         {
-            return redirect()->back()->with(AlertFormatter::success('Data Alumni Berhasil Ditambahkan'));
+            return redirect()->back()->with($result);
         }
-        return redirect()->back()->with(AlertFormatter::danger('Data Alumni Gagal Ditambahkan'));
+        return redirect()->back()->with($result);
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama' => 'required',
-            'angkatan' => 'required|numeric',
-            'lokasi_id' => 'required|numeric',
-            'tempat_kerja' => 'required',
+            'name' => 'required',
+            'nim' => 'required|numeric',
+            // 'password' => 'required|confirmed',
+            // 'email' => 'required|string|email|max:255|unique:users,email,'. auth()->user()->id,
         ]);
 
-        $alumni                 = Alumni::findOrFail($id);
-        $alumni->nama           = $request->nama;
-        $alumni->angkatan       = $request->angkatan;
-        $alumni->lokasi_id      = $request->lokasi_id;
-        $alumni->tempat_kerja   = $request->tempat_kerja;
-
-        if($alumni->save())
+        // dd($request->all());
+        $result = AlumniServices::storeAlumni($request, $id);
+        if($result['status'] == 'success')
         {
             return redirect()->back()->with(AlertFormatter::success('Data Alumni Berhasil Ubah'));
         }
@@ -71,4 +63,12 @@ class AlumniController extends Controller
         }
         return redirect()->back()->with(AlertFormatter::danger('Data Alumni Gagal Hapus'));
     }
+
+    // for API
+    public function getAlumni(Request $request)
+    {
+        $alumni = AlumniServices::getAlumnus($request->query('nim'));
+        return response()->json($alumni);
+    }
+
 }

@@ -8,7 +8,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>AdminLTE 2 | Starter</title>
+    <title>SISTEM INFORMASI ALUMNI KEDOKTERAN UNPATTI | {{ strtoupper(Auth::user()->role) }} </title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link rel="stylesheet" href="{{ asset('assets/bower_components/bootstrap/dist/css/bootstrap.min.css') }}">
@@ -39,7 +39,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
         @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
 
         html body .logo {
-            font-family: 'Kaushan Script', cursive !important;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, cursive !important;
+        }
+        .logo .logo-mini{
+            font-size: 12px!important;
+        }
+        .logo .logo-lg{
+            font-size: 14px!important;
         }
 
     </style>

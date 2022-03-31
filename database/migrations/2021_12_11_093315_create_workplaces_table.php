@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkpleacesTable extends Migration
+class CreateWorkplacesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateWorkpleacesTable extends Migration
      */
     public function up()
     {
-        Schema::create('workpleaces', function (Blueprint $table) {
+        Schema::create('workplaces', function (Blueprint $table) {
             $table->id();
             $table->string('workplace_name', 255);
             $table->double('latitude');
             $table->double('longitude');
+            $table->unsignedBigInteger('city_id')->nullable();
             $table->timestamps();
+
+            $table->foreign('city_id')->references('id')->on('cities');
 
         });
     }
@@ -30,6 +33,6 @@ class CreateWorkpleacesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('workpleaces');
+        Schema::dropIfExists('workplaces');
     }
 }

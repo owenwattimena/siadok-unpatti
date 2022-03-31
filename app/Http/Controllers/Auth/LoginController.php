@@ -28,10 +28,10 @@ class LoginController extends Controller
         
         $remember_me  = ( !empty( $request->remember_me ) ) ? TRUE : FALSE;
 
-        if(\Auth::attempt($credential)){
+        if(Auth::attempt($credential, $remember_me)){
             $user = User::where( ["username" => $credential['username']] )->first();
             
-            \Auth::login($user, $remember_me);
+            Auth::login($user, $remember_me);
             
             return redirect()->route('dashboard');
         }
@@ -48,11 +48,8 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
         return redirect('/');
     }
 }

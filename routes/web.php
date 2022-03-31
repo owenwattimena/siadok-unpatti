@@ -51,17 +51,17 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/profile', [ProfileController::class, 'index'])->name('dashboard.profile');
     Route::put('/dashboard/profile', [ProfileController::class, 'updateProfile'])->name('dashboard.profile.put');
     Route::put('/dashboard/profile/change-password', [ProfileController::class, 'changePassword'])->name('dashboard.profile.password');
-    Route::prefix('lokasi')->group(function () {
-        Route::get('/', [LokasiController::class, 'index'])->name('lokasi.index');
-        Route::post('store', [LokasiController::class, 'store'])->name('lokasi.store');
-        Route::post('{id}/update', [LokasiController::class, 'update'])->name('lokasi.update');
-        Route::delete('{id}/delete', [LokasiController::class, 'delete'])->name('lokasi.delete');
+    Route::prefix('city')->group(function () {
+        Route::get('/', [LokasiController::class, 'index'])->name('city.index');
+        Route::post('store', [LokasiController::class, 'store'])->name('city.store');
+        Route::post('{id}/update', [LokasiController::class, 'update'])->name('city.update');
+        Route::delete('{id}/delete', [LokasiController::class, 'delete'])->name('city.delete');
     });
     
     Route::prefix('alumni')->group(function () {
         Route::get('/', [AlumniController::class, 'index'])->name('alumni.index');
-        Route::post('store', [AlumniController::class, 'store'])->name('alumni.store');
-        Route::put('{id}/update', [AlumniController::class, 'update'])->name('alumni.update');
-        Route::delete('{id}/delete', [AlumniController::class, 'delete'])->name('alumni.delete');
+        Route::post('/', [AlumniController::class, 'store'])->name('alumni.store');
+        Route::put('{id}', [AlumniController::class, 'update'])->name('alumni.update');
+        Route::delete('{id}', [AlumniController::class, 'delete'])->name('alumni.delete');
     });
 });

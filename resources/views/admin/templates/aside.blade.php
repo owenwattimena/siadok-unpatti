@@ -32,14 +32,14 @@
             <!-- Optionally, you can add icons to the links -->
             <li class="{{ (request()->is('dashboard*')) ? 'active' : '' }}"><a href="{{ route('dashboard') }}"><i class="fa fa-map"></i> <span>Peta</span></a></li>
             {{-- <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li> --}}
-            <li class="treeview {{ ((request()->is('lokasi*')) || (request()->is('alumni*'))) ? 'active' : '' }}">
+            <li class="treeview {{ ((request()->is('city*')) || (request()->is('alumni*'))) ? 'active' : '' }}">
                 <a href="#"><i class="fa fa-list"></i> <span>Master Data</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{ (request()->is('lokasi*')) ? 'active' : '' }}"><a href="{{ route('lokasi.index') }}"><i class="fa fa-map-marker"></i> Lokasi</a></li>
+                    <li class="{{ (request()->is('city*')) ? 'active' : '' }}"><a href="{{ route('city.index') }}"><i class="fa fa-map-marker"></i> Kota/Kabupaten</a></li>
                     <li class="{{ (request()->is('alumni*')) ? 'active' : '' }}"><a href="{{ route('alumni.index') }}"><i class="fa fa-users"></i> Alumni</a></li>
                 </ul>
             </li>

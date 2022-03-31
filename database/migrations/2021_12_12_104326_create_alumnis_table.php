@@ -16,16 +16,14 @@ class CreateAlumnisTable extends Migration
         Schema::create('alumni', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->integer('entry_year');
-            $table->integer('graduation_year');
-            $table->unsignedBigInteger('city_id');
-            $table->unsignedBigInteger('workpelace_id');
+            $table->integer('entry_year')->nullable();
+            $table->integer('graduation_year')->nullable();
+            $table->unsignedBigInteger('workplace_id')->nullable();
             $table->longText('previous_job')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('city_id')->references('id')->on('cities');
-            $table->foreign('workpelace_id')->references('id')->on('workpleaces');
+            $table->foreign('workplace_id')->references('id')->on('workplaces');
         });
     }
 
