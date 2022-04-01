@@ -177,7 +177,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Keluar</button>
-                    <button type="submit" onclick="document.getElementById('form').submit();" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
+                    <button type="submit" onclick="return formSubmit()" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
                 </div>
             </form>
         </div>

@@ -414,5 +414,14 @@
         });
     }
 
+    function formSubmit()
+    {
+        if(document.getElementById('form').reportValidity())
+        {
+            return document.getElementById('form').submit();
+        }
+        return;
+    }
+
 </script>
 @endsection
