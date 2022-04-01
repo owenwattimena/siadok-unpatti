@@ -129,17 +129,26 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="entry_year">Tahun Masuk</label>
-                                    <input type="number" min="2000" max="3000" class="form-control" id="entry_year" name="entry_year" placeholder="[Tahun Masuk]">
+                                    <input type="number" min="2000" max="3000" class="form-control" id="entry_year" name="entry_year" value="{{ old('entry_year') }}" placeholder="[Tahun Masuk]">
+                                    @error('entry_year')
+                                        <span class="text-red">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="form-group">
                                     <label for="graduation_year">Tahun Lulus</label>
-                                    <input type="number" min="2000" max="3000" class="form-control" id="graduation_year" name="graduation_year" placeholder="[Tahun Lulus]">
+                                    <input type="number" min="2000" max="3000" class="form-control" id="graduation_year" name="graduation_year" value="{{ old('graduation_year') }}" placeholder="[Tahun Lulus]">
+                                    @error('graduation_year')
+                                        <span class="text-red">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="form-group">
                                     <label for="previous_job">Riwayat Pekerjaan</label>
-                                    <textarea class="form-control" id="previous_job" name="previous_job" rows="3" placeholder="[Pekerjaan Sebelumnya]"></textarea>
+                                    <textarea class="form-control" id="previous_job" name="previous_job" rows="3" placeholder="[Pekerjaan Sebelumnya]">{{ old('previous_job') }}</textarea>
+                                    @error('previous_job')
+                                        <span class="text-red">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="form-group">
                                     <label for="workplace">Tempat Kerja</label>
