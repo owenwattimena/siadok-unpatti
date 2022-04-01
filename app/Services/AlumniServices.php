@@ -35,9 +35,10 @@ class AlumniServices
             ->get();
     }
     // use to get list of entry year with total alumni per year
-    public static function getEntryYear()
+    public static function getGroupEntryYear()
     {
-        return DB::table('users')->join('alumni', 'users.id', '=', 'alumni.user_id')->get();
+        return DB::table('users')->leftJoin('alumni', 'users.id', '=', 'alumni.user_id')->where('role', 'alumni')->orderBy('alumni.entry_year', 'asc')->get()->groupBy('entry_year');
+        // return DB::table('alumni')->select('entry_year')->distinct()->get();
     }
 
     public static function storeAlumni(Request $request, int $nim = null): array

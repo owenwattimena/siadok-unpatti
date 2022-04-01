@@ -61,49 +61,103 @@
                     </div>
                     <div class="box-footer no-padding">
                         <ul class="nav nav-stacked">
-                            <li><a href="#">2016 <span class="pull-right badge bg-green">31</span></a></li>
-                            <li><a href="#">2017 <span class="pull-right badge bg-green">5</span></a></li>
-                            <li><a href="#">2018 <span class="pull-right badge bg-green">12</span></a></li>
-                            <li><a href="#">2019 <span class="pull-right badge bg-green">842</span></a></li>
+                            @foreach ($entryYear as $key => $value)
+                            <li><a href="#">{{ $key }} <span class="pull-right badge bg-green">{{ count($value) }}</span></a></li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
 
             </div>
             <div class="col-md-10">
-                <div id="map" class="map">
-                    <div class="modal fade" id="modal-dialog">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span></button>
-                                    <h4 class="modal-title">Default Modal</h4>
+
+
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#tab_map" data-toggle="tab">PETA</a></li>
+                        <li><a href="#tab_list" data-toggle="tab">DAFTAR</a></li>
+                        
+                    </ul>
+                    <div class="tab-content">
+
+                        <div class="tab-pane active" id="tab_map">
+                            <div id="map" class="map">
+                                <div class="modal fade" id="modal-dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title">Default Modal</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <table class="table table-striped">
+                                                    <tr>
+                                                        <th style="width: 10px">#</th>
+                                                        <th>Nama</th>
+                                                        <th>Tempat Kerja</th>
+                                                    </tr>
+                                                    <tbody id="tbody"></tbody>
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Kembali</button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
                                 </div>
-                                <div class="modal-body">
-                                    <table class="table table-striped">
+                                <!-- /.modal -->
+                            </div>
+                        </div>
+
+                        <div class="tab-pane" id="tab_list">
+                            <div class="table-responsive">
+
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
                                         <tr>
                                             <th style="width: 10px">#</th>
-                                            <th>Nama</th>
-                                            <th>Tempat Kerja</th>
+                                            <th>NIM</th>
+                                            <th>NAMA</th>
+                                            <th>TAHUN MASUK</th>
+                                            <th>TAHUN LULUS</th>
+                                            <th>TEMPAT KERJA</th>
+                                            <th>KOTA/KABUPATEN</th>
+                                            <th>AKSI</th>
                                         </tr>
-                                        <tbody id="tbody"></tbody>
-                                    </table>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Kembali</button>
-                                </div>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($alumni as $key => $item)
+                                        <tr>
+                                            <td>{{ ++$key }}</td>
+                                            <td>{{ $item->nim }}</td>
+                                            <td>{{ $item->name }}</td>
+                                            <td>{{ $item->entry_year ?? '-' }}</td>
+                                            <td>{{ $item->graduation_year ?? '-'}}</td>
+                                            <td>{{ $item->workplace_name ?? '-'}}</td>
+                                            <td>{{ $item->city_name ?? '-'}}</td>
+                                            <td>
+                                                [DETAIL]
+                                                {{-- <button class="btn btn-sm bg-blue" onclick="return detailMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-list"></i> Detail</button> --}}
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
-                            <!-- /.modal-content -->
                         </div>
-                        <!-- /.modal-dialog -->
+
                     </div>
-                    <!-- /.modal -->
+
                 </div>
+
             </div>
         </div>
-    </section>
-    <!-- /.content -->
+</div>
+</section>
+<!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 @endsection
@@ -113,6 +167,8 @@
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js" integrity="sha512-e+JSf1UWuoLdiGeXXi5byQqIN7ojQLLgvC+aV0w9rnKNwNDBAz99sCgS20+PjT/r+yitmU7kpGVZJQDDgevhoA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
 {{-- <script src="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.js"></script> --}}
 @include('assets.js.leaflet')
+<script src="{{ asset('assets/app-js/markerKabMaluku.js') }}"></script>
+
 <script>
     (function() {
 
@@ -127,6 +183,7 @@
         });
 
         var lokasi = @json($lokasi);
+        console.log(lokasi);
         var base_layer, map, mbAttr, mbUrl;
 
         mbAttr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
@@ -146,75 +203,7 @@
             , layers: [base_layer]
         , }).setView([-6.0251815, 131.1685883]);
         map.addControl(new L.Control.Fullscreen())
-        L.marker([-3.3163733, 126.5720491], {
-            opacity: 0.01
-        }).bindLabel('KAB. BURU', {
-            noHide: true
-            , offset: [-42, -40]
-        , }).addTo(map);
-        L.marker([-3.600275, 126.6161067], {
-            opacity: 0.01
-        }).bindLabel('KAB. BURU SELATAN', {
-            noHide: true
-            , offset: [-62, -10]
-        , }).addTo(map);
-        L.marker([-6.161061, 134.4254625], {
-            opacity: 0.01
-        }).bindLabel('KAB. KEP. ARU', {
-            noHide: true
-            , offset: [-52, -10]
-        , }).addTo(map);
-        L.marker([-7.4597688, 131.4123121], {
-            opacity: 0.01
-        }).bindLabel('KAB. KEP. TANIMBAR', {
-            noHide: true
-            , offset: [-72, -10]
-        , }).addTo(map);
-        L.marker([-8.1439268, 127.7812751], {
-            opacity: 0.01
-        }).bindLabel('KAB. MBD', {
-            noHide: true
-            , offset: [-42, -10]
-        , }).addTo(map);
-        L.marker([-3.3054009, 128.9569751], {
-            opacity: 0.01
-        }).bindLabel('KAB. MALUKU TENGAH', {
-            noHide: true
-            , offset: [-42, -10]
-        , }).addTo(map);
-        L.marker([-5.8830139, 132.7284609], {
-            opacity: 0.01
-        }).bindLabel('KAB. MALUKU TENGGARA', {
-            noHide: true
-            , offset: [-62, -10]
-        , }).addTo(map);
-        L.marker([-3.0591965, 128.1815531], {
-            opacity: 0.01
-        }).bindLabel('KAB. SBB', {
-            noHide: true
-            , offset: [-62, -10]
-        , }).addTo(map);
-        L.marker([-3.1096585, 130.4897502], {
-            opacity: 0.01
-        }).bindLabel('KAB. SBT', {
-            noHide: true
-            , offset: [-22, -5]
-        , }).addTo(map);
-        L.marker([-3.6933882, 128.1810017], {
-            opacity: 0.01
-        }).bindLabel('KOTA AMBON', {
-            noHide: true
-            , offset: [-22, -5]
-        , }).addTo(map);
-        L.marker([-5.5618696, 132.7455933], {
-            opacity: 0.01
-        }).bindLabel('KOTA TUAL', {
-            noHide: true
-            , offset: [-22, -5]
-        , }).addTo(map);
-        // marker.bindTooltip("My Label");
-
-
+        markerKabMaluku(map);
 
         for (var key in lokasi) {
             var data = lokasi[key];

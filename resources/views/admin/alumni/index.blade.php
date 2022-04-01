@@ -55,7 +55,7 @@
                                 <th>TAHUN MASUK</th>
                                 <th>TAHUN LULUS</th>
                                 <th>TEMPAT KERJA</th>
-                                <th>KOTA</th>
+                                <th>KOTA/KABUPATEN</th>
                                 <th>AKSI</th>
                             </tr>
                         </thead>
