@@ -146,7 +146,7 @@
                                     <select type="text" class="form-control select2" id="workplace" name="workplace" placeholder="[Tempat Kerja]">
                                         {{-- <option></option> --}}
                                     </select>
-                                    <small class="text-grey">Kolom Tempat Kerja dapat dipilih atau di isi secara manual. Jika anda memilih Tempat Kerja berdasarkan daftar yang tersedia maka sistem akan secara otomatis melengkapi kolom Kota/Kabupaten dan mengatur Peta</small>
+                                    <small class="text-grey">Kolom Tempat Kerja dapat dipilih atau di tambah secara manual. Jika anda memilih Tempat Kerja berdasarkan daftar yang tersedia maka sistem akan secara otomatis melengkapi kolom Kota/Kabupaten dan mengatur Peta</small>
                                 </div>
                                 <div class="form-group">
                                     <label for="city_id">Kota/Kabupaten</label>

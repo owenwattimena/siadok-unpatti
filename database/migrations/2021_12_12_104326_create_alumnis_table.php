@@ -22,7 +22,7 @@ class CreateAlumnisTable extends Migration
             $table->longText('previous_job')->nullable();
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('workplace_id')->references('id')->on('workplaces');
         });
     }

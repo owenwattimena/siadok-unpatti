@@ -7,6 +7,7 @@ use App\Models\Lokasi;
 use Illuminate\Http\Request;
 use App\Helpers\AlertFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Services\AlumniServices;
 use App\Services\CityServices;
 
@@ -25,9 +26,9 @@ class AlumniController extends Controller
     {
         $request->validate([
             'name' => 'required',
-            'nim' => 'required|numeric',
+            'nim' => 'required|numeric|unique:users,nim',
             'password' => 'required|confirmed',
-            'email' => 'required|string|email|max:255|unique:users,email,'. auth()->user()->id,
+            'email' => 'required|string|email|max:255|unique:users,email',
         ]);
         $result = AlumniServices::storeAlumni($request);
         if($result['status'] == 'success')
@@ -45,7 +46,7 @@ class AlumniController extends Controller
             // 'password' => 'required|confirmed',
             // 'email' => 'required|string|email|max:255|unique:users,email,'. auth()->user()->id,
         ]);
-
+        
         // dd($request->all());
         $result = AlumniServices::storeAlumni($request, $id);
         if($result['status'] == 'success')
@@ -57,7 +58,10 @@ class AlumniController extends Controller
 
     public function delete($id)
     {
-        if(Alumni::destroy($id))
+        if(User::where('id', $id)->delete())
+        {
+            return redirect()->back()->with(AlertFormatter::success('Data Alumni Berhasil Dihapus'));
+        }
         {
             return redirect()->back()->with(AlertFormatter::success('Data Alumni Berhasil Hapus'));
         }

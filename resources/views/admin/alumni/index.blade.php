@@ -79,80 +79,17 @@
                                     </form>
                                 </td>
                             </tr>
-                            {{-- <div class="modal fade" id="modal-default-{{ $key }}">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <form action="{{ route('alumni.update', $item->id) }}" method="POST">
-                                        @csrf
-                                        @method('put')
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <h4 class="modal-title">Ubah Alumni</h4>
-                                        </div>
-                                        <div class="modal-body form-horizontal">
-                                            <div class="form-group">
-                                                <label for="nama" class="col-sm-2 control-label">Nama</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="nama" name="nama" value="{{ $item->nama }}" placeholder="Nama">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="angkatan" class="col-sm-2 control-label">Tahun Angkatan</label>
-                                                <div class="col-sm-10">
-                                                    <input type="number" min="2000" max="3000" class="form-control" id="angkatan" name="angkatan" value="{{ $item->angkatan }}" placeholder="angkatan">
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="lokasi_id" class="col-sm-2 control-label">Lokasi</label>
-                                                <div class="col-sm-10">
-                                                    <select min="2000" max="3000" class="form-control" id="lokasi_id" name="lokasi_id">
-                                                        <option>---pilih lokasi---</option>
-                                                        @foreach ($lokasi as $value)
-                                                        <option value="{{ $value->id }}" {{ $value->id == $item->lokasi_id ? 'selected' : '' }}>{{ $value->nama }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="tempat_kerja" class="col-sm-2 control-label">Tempat Kerja</label>
-                                                <div class="col-sm-10">
-                                                    <input type="text" class="form-control" id="tempat_kerja" name="tempat_kerja" value="{{ $item->tempat_kerja }}" placeholder="Tempat Kerja">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Keluar</button>
-                                            <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Simpan</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <!-- /.modal-content -->
-                            </div>
-                            <!-- /.modal-dialog -->
-                </div> --}}
-                @endforeach
-                </tbody>
-                {{-- <tfoot>
-                            <tr>
-                                <th>#</th>
-                                <th>Nama</th>
-                                <th>Tahun Angkatan</th>
-                                <th>Lokasi</th>
-                                <th>Tempat Kerja</th>
-                                <th>Pilihan</th>
-                            </tr>
-                        </tfoot> --}}
-                </table>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
+            <!-- /.box-body -->
         </div>
-        <!-- /.box-body -->
-</div>
-<!-- /.box -->
+        <!-- /.box -->
 
-</section>
-<!-- /.content -->
+    </section>
+    <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
 
@@ -185,20 +122,20 @@
         showCityMap(false);
         initMap();
         $('#workplace').select2({
-            placeholder: "--- Masukan Tempat Kerja ---",
-            tags: [],
-            ajax: {
-                type: 'GET',
-                url: `{{ url('api/v1/select2workplace') }}`,
-                dataType: 'json',
-                data: function(params) {
+            placeholder: "--- Masukan Tempat Kerja ---"
+            , tags: []
+            , ajax: {
+                type: 'GET'
+                , url: `{{ url('api/v1/select2workplace') }}`
+                , dataType: 'json'
+                , data: function(params) {
                     var query = {
                         workplace: params.term
                     }
                     // Query parameters will be ?workplace=[term]
                     return query;
-                },
-                processResults: function (data) {
+                }
+                , processResults: function(data) {
                     return {
                         results: data
                     };
@@ -236,12 +173,16 @@
 
     function showPasswordFiled(state = true) {
         if (state) {
+            $("#password").attr('disabled', false);
             $("#password").show();
+            $("#password_confirmation").attr('disabled', false);
             $("#password_confirmation").show();
             $('label[for=password]').show();
             $('label[for=password_confirmation]').show();
         } else {
+            $("#password").attr('disabled', true);
             $("#password").hide();
+            $("#password_confirmation").attr('disabled', true);
             $("#password_confirmation").hide();
             $('label[for=password]').hide();
             $('label[for=password_confirmation]').hide();
@@ -343,11 +284,11 @@
         showPasswordFiled(false);
         var ajax = ajaxGet(`{{ url('api/v1/alumni?nim=') }}${nim}`);
         ajax.done(function(result) {
-            setFormValue(result);
+            setFormValue(result, true);
         });
     }
 
-    function setFormValue(data) {
+    function setFormValue(data, isDetail = false) {
         var workplace = $('#workplace');
         if (data != null) {
             $("#name").val(data.name);
@@ -356,16 +297,16 @@
             $("#entry_year").val(data.entry_year);
             $("#graduation_year").val(data.graduation_year);
             $("#previous_job").val(data.previous_job);
-            if(data.workplace_name != null){
+            if (data.workplace_name != null) {
                 var option = new Option(data.workplace_name, data.workplace_id, true, true);
                 workplace.append(option).trigger('change');
-            }else{
-                var option = new Option('-', '-', true, true);
+            } else {
+                var option = new Option(isDetail ? '-' : '', isDetail ? '-' : '', true, true);
                 workplace.append(option).trigger('change');
             }
-            if(data.city_id != null){
+            if (data.city_id != null) {
                 $('#city_id').val(data.city_id);
-            }else{
+            } else {
                 $('#city_id').val('-');
             }
             $("#latitude").val(data.latitude);
@@ -399,6 +340,7 @@
         showPasswordFiled();
         setFormValue();
     }
+
     function updateMode(nim) {
         $('form').attr('action', `{{ url('alumni') }}/${nim}`);
         $('input[name=_method]').val('PUT');
@@ -414,10 +356,8 @@
         });
     }
 
-    function formSubmit()
-    {
-        if(document.getElementById('form').reportValidity())
-        {
+    function formSubmit() {
+        if (document.getElementById('form').reportValidity()) {
             return document.getElementById('form').submit();
         }
         return;

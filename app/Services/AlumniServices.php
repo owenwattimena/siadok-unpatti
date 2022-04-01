@@ -42,105 +42,111 @@ class AlumniServices
 
     public static function storeAlumni(Request $request, int $nim = null): array
     {
-        if($nim != null)
-        {
-            $oldData = self::getAlumnus($nim);
-        }
+        try {
+            if ($nim != null) {
+                $oldData = self::getAlumnus($nim);
+            }
 
-        $user                 = $nim == null ? new User : User::where('nim', $nim)->first();
-        $user->name           = $request->name;
-        $user->nim            = $request->nim;
-        $user->username       = $request->nim;
-        $user->email          = $request->email;
-        if ($nim == null){
-            $user->password   = Hash::make($request->password);
-            $user->created_by     = auth()->user()->id;
-            $user->role       = "alumni";
-        }
-        if ($user->save()) {
-            // check if $nim not null its mean user update they data. then get alumni by user id else create new alumni
-            if($nim == null){
-                $alumni = new Alumni;
-            }else{
-                $alumni = Alumni::where('user_id', $user->id)->first();
-                if(!$alumni){
+
+            $user                 = $nim == null ? new User : User::where('nim', $nim)->first();
+            $user->name           = $request->name;
+            $user->nim            = $request->nim;
+            $user->username       = $request->nim;
+            $user->email          = $request->email;
+            if ($nim == null) {
+                $user->password   = Hash::make($request->password);
+                $user->created_by     = auth()->user()->id;
+                $user->role       = "alumni";
+            }
+            if ($user->save()) {
+                // check if $nim not null its mean user update they data. then get alumni by user id else create new alumni
+                if ($nim == null) {
                     $alumni = new Alumni;
-                }
-            }
-            $alumni->user_id            = $user->id;
-            $alumni->entry_year         = $request->entry_year;
-            $alumni->graduation_year    = $request->graduation_year;
-            $alumni->previous_job       = $request->previous_job;
-
-            //check if workplace is select 
-            if ($request->workplace != null) {
-                /// Check if workplace is int its mean user choose from list of workplace
-                if(is_int(intval($request->workplace))){
-                    /// check if old workplace equal to new workplace its mean user not change workplace name
-                    if($oldData->workplace_id == $request->workplace){
-                        ///check if old lat is't equal to new lat its or old long is't equal to new long its mean user change pin location then create new workplace
-                        if($oldData->latitude != $request->latitude || $oldData->longitude != $request->longitude || $oldData->city_id != $request->city_id){
-                            $workplace                  =  new Workplace;
-                            $workplace->workplace_name  = $oldData->workplace_name;
-                            $workplace->latitude        = $request->latitude;
-                            $workplace->longitude       = $request->longitude;
-                            $workplace->city_id         = $request->city_id;
-                            if ($workplace->save()) {
-                                $alumni->workplace_id       = $workplace->id;
-                            }
-                        }
-                        else{
-                            ///else its mean user not change pin location then use old workplace
-                            $alumni->workplace_id = $oldData->workplace_id;
-                        }
-                    }else{
-                        /// else its mean user change new workplace
-                        $newWorkplace  =  Workplace::findOrFail($request->workplace);
-                        ///check if old lat is't equal to new lat its or old long is't equal to new long its mean user change pin location then create new workplace
-                        if($newWorkplace->latitude != $request->latitude || $newWorkplace->longitude != $request->longitude || $oldData->city_id != $request->city_id){
-                            $workplace                  =  new Workplace;
-                            $workplace->workplace_name  = $oldData->workplace_name;
-                            $workplace->latitude        = $request->latitude;
-                            $workplace->longitude       = $request->longitude;
-                            $workplace->city_id         = $request->city_id;
-                            if ($workplace->save()) {
-                                $alumni->workplace_id       = $workplace->id;
-                            }
-                        }
-                        else{
-                            ///else its mean user not change pin location then use new selected workplace
-                            $alumni->workplace_id = $newWorkplace->id;
-                        }
-                    }
-                }else{
-                    // else its mean user create new workplace
-                    $workplace                  =  new Workplace;
-                    $workplace->workplace_name  = $request->workplace;
-                    $workplace->latitude        = $request->latitude;
-                    $workplace->longitude       = $request->longitude;
-                    $workplace->city_id         = $request->city_id;
-                    if ($workplace->save()) {
-                        $alumni->workplace_id       = $workplace->id;
+                } else {
+                    $alumni = Alumni::where('user_id', $user->id)->first();
+                    if (!$alumni) {
+                        $alumni = new Alumni;
                     }
                 }
-            }
-            /// check if request workplace is't null its mean user has input workplace value
-            // if ($request->workplace != null) {
-            //     /// check if instace of Workplace is set, its mean user that user wont to create or udpate workplace 
-            //     if(isset($workplace)){
-            //         // if workplace is succesfully save set workplace id to alumni
-            //         if ($workplace->save()) {
-            //             $alumni->workplace_id       = $workplace->id;
-            //         }
-            //     }else{
-            //         /// else its mean user dont change the workplace value then use workplace old data
-            //         $alumni->workplace_id= $oldData->workplace_id;
-            //     }
-            // }
-            $alumni->save();
+                $alumni->user_id            = $user->id;
+                $alumni->entry_year         = $request->entry_year;
+                $alumni->graduation_year    = $request->graduation_year;
+                $alumni->previous_job       = $request->previous_job;
 
-            return AlertFormatter::success('Data Alumni Berhasil Ditambahkan');
+                //check if workplace is select 
+                if ($request->workplace != null ) {
+                    /// Check if workplace is int its mean user choose from list of workplace
+
+                    if (is_int(intval($request->workplace)) && $request->workplace != intval($request->workplace)) {
+                        /// check if old workplace equal to new workplace its mean user not change workplace name
+                        if ($oldData->workplace_id == $request->workplace) {
+                            ///check if old lat is't equal to new lat its or old long is't equal to new long its mean user change pin location then create new workplace
+                            if ($oldData->latitude != $request->latitude || $oldData->longitude != $request->longitude || $oldData->city_id != $request->city_id) {
+                                $workplace                  =  new Workplace;
+                                $workplace->workplace_name  = $oldData->workplace_name;
+                                $workplace->latitude        = $request->latitude;
+                                $workplace->longitude       = $request->longitude;
+                                $workplace->city_id         = $request->city_id;
+                                if ($workplace->save()) {
+                                    $alumni->workplace_id       = $workplace->id;
+                                }
+                            } else {
+                                ///else its mean user not change pin location then use old workplace
+                                $alumni->workplace_id = $oldData->workplace_id;
+                            }
+                        } else {
+                            /// else its mean user change new workplace
+                            $newWorkplace  =  Workplace::findOrFail($request->workplace);
+                            ///check if old lat is't equal to new lat its or old long is't equal to new long its mean user change pin location then create new workplace
+                            if ($newWorkplace->latitude != $request->latitude || $newWorkplace->longitude != $request->longitude || $oldData->city_id != $request->city_id) {
+                                $workplace                  =  new Workplace;
+                                $workplace->workplace_name  = $oldData->workplace_name;
+                                $workplace->latitude        = $request->latitude;
+                                $workplace->longitude       = $request->longitude;
+                                $workplace->city_id         = $request->city_id;
+                                if ($workplace->save()) {
+                                    $alumni->workplace_id       = $workplace->id;
+                                }
+                            } else {
+                                ///else its mean user not change pin location then use new selected workplace
+                                $alumni->workplace_id = $newWorkplace->id;
+                            }
+                        }
+                    } else {
+                        // else its mean user create new workplace
+                        $workplace                  =  new Workplace;
+                        $workplace->workplace_name  = $request->workplace;
+                        $workplace->latitude        = $request->latitude;
+                        $workplace->longitude       = $request->longitude;
+                        $workplace->city_id         = $request->city_id;
+                        if ($workplace->save()) {
+                            $alumni->workplace_id       = $workplace->id;
+                        }
+                    }
+                }
+                /// check if request workplace is't null its mean user has input workplace value
+                // if ($request->workplace != null) {
+                //     /// check if instace of Workplace is set, its mean user that user wont to create or udpate workplace 
+                //     if(isset($workplace)){
+                //         // if workplace is succesfully save set workplace id to alumni
+                //         if ($workplace->save()) {
+                //             $alumni->workplace_id       = $workplace->id;
+                //         }
+                //     }else{
+                //         /// else its mean user dont change the workplace value then use workplace old data
+                //         $alumni->workplace_id= $oldData->workplace_id;
+                //     }
+                // }
+                $alumni->save();
+
+                return AlertFormatter::success('Data Alumni Berhasil Ditambahkan');
+            }
+            return AlertFormatter::danger('Data Alumni Gagal Ditambahkan');
+        } catch (\Throwable $e) {
+            dd($e);
+            return AlertFormatter::danger('Data Alumni Gagal Ditambahkan. ' . $e->getMessage());
+            # code...
         }
-        return AlertFormatter::danger('Data Alumni Gagal Ditambahkan');
+
     }
 }
