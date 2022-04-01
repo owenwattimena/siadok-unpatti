@@ -77,7 +77,7 @@ class AlumniServices
                 if ($request->workplace != null ) {
                     /// Check if workplace is int its mean user choose from list of workplace
 
-                    if (is_int(intval($request->workplace))) {
+                    if (is_int($request->workplace)) {
                         /// check if old workplace equal to new workplace its mean user not change workplace name
                         if ($oldData->workplace_id == $request->workplace) {
                             ///check if old lat is't equal to new lat its or old long is't equal to new long its mean user change pin location then create new workplace
