@@ -39,7 +39,7 @@
         <div class="login-box-body">
             <div class="login-logo">
                 <img src="https://fk.unpatti.ac.id/wp-content/uploads/2020/09/cropped-logo-kecil-4.png" alt="" width="150" style="margin-bottom: 15px"><br>
-                <a href="{{ asset('assets/') }}/index2.html">APLIKASI PENEMPATAN ALUMNI</a>
+                <a href="{{ asset('assets/') }}/index2.html">SISTEM INFORMASI ALUMNI</a>
             </div>
             <p class="login-box-msg">Masuk untuk memulai sesi anda</p>
             @if (session('status'))
