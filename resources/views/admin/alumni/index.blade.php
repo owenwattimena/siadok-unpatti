@@ -119,7 +119,11 @@
             $('#modal-default').modal('show');
         }, 400);
         @endif
+        @if($errors->has('city_id')||$errors->has('latitude')||$errors->has('longitude'))
+        showCityMap();
+        @else
         showCityMap(false);
+        @endif
         initMap();
         $('#workplace').select2({
             placeholder: "--- Masukan Tempat Kerja ---"

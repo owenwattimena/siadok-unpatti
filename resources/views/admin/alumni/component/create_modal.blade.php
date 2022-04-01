@@ -146,6 +146,9 @@
                                     <select type="text" class="form-control select2" id="workplace" name="workplace" placeholder="[Tempat Kerja]">
                                         {{-- <option></option> --}}
                                     </select>
+                                    @error('workplace')
+                                        <span class="text-red">{{ $message }}</span>
+                                    @enderror
                                     <small class="text-grey">Kolom Tempat Kerja dapat dipilih atau di tambah secara manual. Jika anda memilih Tempat Kerja berdasarkan daftar yang tersedia maka sistem akan secara otomatis melengkapi kolom Kota/Kabupaten dan mengatur Peta</small>
                                 </div>
                                 <div class="form-group">
@@ -156,17 +159,26 @@
                                         <option value="{{ $item->id }}">{{ $item->city_name }}</option>
                                         @endforeach
                                     </select>
+                                    @error('city_id')
+                                        <span class="text-red">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <label for="map">Peta Lokasi Tempat Kerja</label>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <input type="number" step="any" class="form-control" id="latitude" name="latitude" placeholder="[Latitude]">
+                                            @error('latitude')
+                                                <span class="text-red">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <input type="number" step="any" class="form-control" id="longitude" name="longitude" placeholder="[Longitude]">
+                                            @error('longitude')
+                                                <span class="text-red">{{ $message }}</span>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>

@@ -30,6 +30,22 @@ class AlumniController extends Controller
             'password' => 'required|confirmed',
             'email' => 'required|string|email|max:255|unique:users,email',
         ]);
+
+        if($request->workplace != null){
+            $request->validate([
+                'city_id' => 'required',
+                'latitude' => 'required',
+                'longitude' => 'required',
+            ]);
+        }
+        if($request->city_id != null){
+            $request->validate([
+                'workplace' => 'required',
+                'latitude' => 'required',
+                'longitude' => 'required',
+            ]);
+        }
+
         $result = AlumniServices::storeAlumni($request);
         if($result['status'] == 'success')
         {
