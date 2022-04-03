@@ -67,7 +67,7 @@
                     <div class="box-footer no-padding">
                         <ul class="nav nav-stacked">
                             @foreach ($entryYear as $key => $value)
-                            <li class="{{ app('request')->input('entry_year') == $key  ? 'active' : '' }}"><a href="{{ route('dashboard-filter', ['entry_year'=> $key]) }}">{{ $key }} <span class="pull-right badge bg-green">{{ count($value) }}</span></a></li>
+                            <li class="{{ app('request')->input('entry_year') == $key  ? 'active' : '' }}"><a href="{{ route('dashboard-filter', ['entry_year'=> $key]) }}">{{ empty($key) ? '-' : $key }} <span class="pull-right badge bg-green">{{ count($value) }}</span></a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -256,7 +256,7 @@
                         li.dataset.alumni = JSON.stringify(data.alumnus)
                         li.dataset.toggle = 'modal'
                         li.dataset.target = '#modal-dialog'
-                        li.innerHTML = `<a href="#">${data.entry_year} <span class="pull-right badge bg-blue">${data.alumnus.length} Orang</span></a>`;
+                        li.innerHTML = `<a href="#">${(data.entry_year == '' ? '-' : data.entry_year)} <span class="pull-right badge bg-blue">${data.alumnus.length} Orang</span></a>`;
                         // card += el;
                         li.onclick = function() {
                             showDetail(this.dataset.lokasi, this.dataset.alumni, this.dataset.angkatan, this.dataset.kota)
@@ -297,7 +297,7 @@
                     `<tr>
                     <td>${++key}</td>
                     <td>${element.name}</td>
-                    <td>${element.graduation_year}</td>
+                    <td>${(element.graduation_year == null ? '-' : element.graduation_year)}</td>
                 </tr>`;
             }
         }
