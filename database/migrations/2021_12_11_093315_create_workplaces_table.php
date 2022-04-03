@@ -16,8 +16,8 @@ class CreateWorkplacesTable extends Migration
         Schema::create('workplaces', function (Blueprint $table) {
             $table->id();
             $table->string('workplace_name', 255);
-            $table->double('latitude');
-            $table->double('longitude');
+            $table->double('latitude', 16);
+            $table->double('longitude', 16);
             $table->unsignedBigInteger('city_id')->nullable();
             $table->timestamps();
 

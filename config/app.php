@@ -1,5 +1,5 @@
 <?php
-
+ini_set('precision', 16);
 return [
 
     /*

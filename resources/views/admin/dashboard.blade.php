@@ -1,6 +1,8 @@
 @extends('admin.templates.template')
 
 @section('style')
+<!-- DataTables -->
+<link rel="stylesheet" href="{{ asset('assets') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 <!-- Leaflet -->
 {{-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script> --}}
@@ -55,6 +57,9 @@
     <section class="content container-fluid">
         <div class="row">
             <div class="col-md-2">
+                @if(app('request')->input('entry_year') != null)                    
+                    <a href="{{ route('dashboard') }}" class="btn btn-sm bg-blue" style="width: 100%">Semua Data</a>
+                @endisset
                 <div class="box widget-user-2">
                     <div class="box-heade text-center">
                         <h5><strong>TAHUN MASUK</strong></h5>
@@ -62,7 +67,7 @@
                     <div class="box-footer no-padding">
                         <ul class="nav nav-stacked">
                             @foreach ($entryYear as $key => $value)
-                            <li><a href="#">{{ $key }} <span class="pull-right badge bg-green">{{ count($value) }}</span></a></li>
+                            <li class="{{ app('request')->input('entry_year') == $key  ? 'active' : '' }}"><a href="{{ route('dashboard-filter', ['entry_year'=> $key]) }}">{{ $key }} <span class="pull-right badge bg-green">{{ count($value) }}</span></a></li>
                             @endforeach
                         </ul>
                     </div>
@@ -89,13 +94,14 @@
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                     <span aria-hidden="true">&times;</span></button>
                                                 <h4 class="modal-title">Default Modal</h4>
+                                                <p class="modal-description">Ambon</p>
                                             </div>
                                             <div class="modal-body">
                                                 <table class="table table-striped">
                                                     <tr>
                                                         <th style="width: 10px">#</th>
-                                                        <th>Nama</th>
-                                                        <th>Tempat Kerja</th>
+                                                        <th>NAMA</th>
+                                                        <th>TAHUN LULUS</th>
                                                     </tr>
                                                     <tbody id="tbody"></tbody>
                                                 </table>
@@ -121,11 +127,11 @@
                                             <th style="width: 10px">#</th>
                                             <th>NIM</th>
                                             <th>NAMA</th>
-                                            <th>TAHUN MASUK</th>
-                                            <th>TAHUN LULUS</th>
+                                            <th>MASUK</th>
+                                            <th>LULUS</th>
                                             <th>TEMPAT KERJA</th>
-                                            <th>KOTA/KABUPATEN</th>
-                                            <th>AKSI</th>
+                                            <th>KOTA/KAB</th>
+                                            {{-- <th>PILIHAN</th> --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -138,10 +144,9 @@
                                             <td>{{ $item->graduation_year ?? '-'}}</td>
                                             <td>{{ $item->workplace_name ?? '-'}}</td>
                                             <td>{{ $item->city_name ?? '-'}}</td>
-                                            <td>
-                                                [DETAIL]
-                                                {{-- <button class="btn btn-sm bg-blue" onclick="return detailMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-list"></i> Detail</button> --}}
-                                            </td>
+                                            {{-- <td>
+                                                <button class="btn btn-sm bg-blue" onclick="return detailMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-list"></i> Detail</button>
+                                            </td> --}}
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -164,12 +169,16 @@
 
 @section('script')
 <script src="https://d3js.org/d3.v3.min.js"></script>
+<!-- DataTables -->
+<script src="{{ asset('assets') }}/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="{{ asset('assets') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js" integrity="sha512-e+JSf1UWuoLdiGeXXi5byQqIN7ojQLLgvC+aV0w9rnKNwNDBAz99sCgS20+PjT/r+yitmU7kpGVZJQDDgevhoA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> --}}
 {{-- <script src="https://d19vzq90twjlae.cloudfront.net/leaflet/v0.7.7/leaflet.js"></script> --}}
 @include('assets.js.leaflet')
 <script src="{{ asset('assets/app-js/markerKabMaluku.js') }}"></script>
 
 <script>
+    $('#example1').DataTable();
     (function() {
 
         var icon = L.icon({
@@ -183,7 +192,6 @@
         });
 
         var lokasi = @json($lokasi);
-        console.log(lokasi);
         var base_layer, map, mbAttr, mbUrl;
 
         mbAttr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
@@ -202,25 +210,26 @@
             , zoom: 7
             , layers: [base_layer]
         , }).setView([-6.0251815, 131.1685883]);
+        markerKabMaluku(L, map);
+        
         map.addControl(new L.Control.Fullscreen())
-        markerKabMaluku(map);
 
         for (var key in lokasi) {
             var data = lokasi[key];
             let latitude = data.latitude;
             let longitude = data.longitude;
             // map.panBy([0, 3500]);
-            L.marker([latitude, longitude], {
-                    icon: icon
+            var marker = L.marker([latitude, longitude], {
+                    icon: icon,
+                    zIndexOffset: 900
                 })
-                .bindPopup(card(data.lokasi, data.angkatan))
+                .bindPopup(card(data.workplace_name,data.angkatan, data.city_name))
                 .addTo(map);
-
         }
 
     }).call(this);
 
-    function card(lokasi, angkatan) {
+    function card(tempatKerja, angkatan, kota) {
         var divBoxWidget = document.createElement('div')
         var divWidgetUserHeader = document.createElement('div')
         var divBoxFooter = document.createElement('div')
@@ -230,65 +239,46 @@
         divBoxFooter.className = 'box-footer no-padding'
         ulNav.className = 'nav nav-stacked'
 
-        divWidgetUserHeader.innerHTML = `<h3 class="widget-user-username">${lokasi}</h3>`
+        divWidgetUserHeader.innerHTML = `<h3 class="widget-user-username">${tempatKerja}</h3>`
+        divWidgetUserHeader.innerHTML += `<p class="no-margin">${kota}</p>`
         divBoxWidget.appendChild(divWidgetUserHeader)
         divBoxWidget.appendChild(divBoxFooter)
         divBoxFooter.appendChild(ulNav)
-
-        if (Object.keys(angkatan).length > 0) {
-            for (var key in angkatan) {
-                if (Object.hasOwnProperty.call(angkatan, key)) {
-                    var data = JSON.stringify(angkatan[key]);
-                    var li = document.createElement('li')
-                    li.dataset.lokasi = lokasi
-                    li.dataset.angkatan = key
-                    li.dataset.alumni = data
-                    li.dataset.toggle = 'modal'
-                    li.dataset.target = '#modal-dialog'
-                    li.innerHTML = `<a href="#">${key} <span class="pull-right badge bg-blue">${angkatan[key].length} Orang</span></a>`;
-                    // card += el;
-                    li.onclick = function() {
-                        showDetail(this.dataset.lokasi, this.dataset.alumni, this.dataset.angkatan)
+        if(angkatan != undefined){
+            if (Object.keys(angkatan).length > 0) {
+                for (var key in angkatan) {
+                    if (Object.hasOwnProperty.call(angkatan, key)) {
+                        var data = angkatan[key];
+                        var li = document.createElement('li')
+                        li.dataset.kota = kota
+                        li.dataset.lokasi = tempatKerja
+                        li.dataset.angkatan = data.entry_year;
+                        li.dataset.alumni = JSON.stringify(data.alumnus)
+                        li.dataset.toggle = 'modal'
+                        li.dataset.target = '#modal-dialog'
+                        li.innerHTML = `<a href="#">${data.entry_year} <span class="pull-right badge bg-blue">${data.alumnus.length} Orang</span></a>`;
+                        // card += el;
+                        li.onclick = function() {
+                            showDetail(this.dataset.lokasi, this.dataset.alumni, this.dataset.angkatan, this.dataset.kota)
+                        }
+                        ulNav.appendChild(li)
                     }
-
-                    ulNav.appendChild(li)
                 }
+            } else {
+                var li = document.createElement('li')
+                li.style.textAlign = 'center'
+                li.style.padding = "50px 15px"
+                li.innerHTML = `Oopss...Belum ada alumni di ${tempatKerja}`;
+                ulNav.appendChild(li)
             }
-        } else {
+        }else{
             var li = document.createElement('li')
-            li.style.textAlign = 'center'
-            li.style.padding = "50px 15px"
-            li.innerHTML = `Oopss...Belum ada alumni di ${lokasi}`;
-            ulNav.appendChild(li)
+                li.style.textAlign = 'center'
+                li.style.padding = "50px 15px"
+                li.innerHTML = `Oopss...Belum ada alumni di ${tempatKerja}`;
+                ulNav.appendChild(li)
         }
-
-
         return divBoxWidget
-        // var card = `<div class="box box-widget widget-user-2" style="margin:0;">
-        //     <!-- Add the bg color to the header using any of the bg-* classes -->
-        //     <div class="widget-user-header bg-yellow">
-        //       <h3 class="widget-user-username">${lokasi}</h3>
-        //     </div>
-        //     <div class="box-footer no-padding">
-        //       <ul class="nav nav-stacked">`; 
-        //         if(Object.keys(angkatan).length > 0){
-        //             for(var key in angkatan){
-        //                 var data = angkatan[key];
-        //                 var el = document.createElement('li')
-        //                 el.innerHTML = `<a href="#">${key} <span class="pull-right badge bg-blue">${angkatan[key].length} Orang</span></a>`;
-        //                 card += `<li class="angkatan" data-lokasi='${lokasi}' onclick='` + showDetail(lokasi, data) + `' data-toggle="modal" data-target="#modal-dialog" style="padding-top:` + ((angkatan[key].length < 5) ? '3px' : '8px') + `; padding-bottom:` + ((angkatan[key].length < 5) ? '3px' : '8px') + `;"><a href="#">${key} <span class="pull-right badge bg-blue">${angkatan[key].length} Orang</span></a></li>`;
-        //                 // card += el;
-        //                 el.onclick=function(){
-        //                     console.log(el)
-        //                 }
-        //             }
-        //         }else{
-        //             card += `<li style="text-align:center; padding:50px 15px; ">Oopss...Belum ada alumni di ${lokasi}</li>`;
-        //         }
-        //         card += `</ul>
-        //     </div>
-        //   </div>`;
-        //   return el;
     }
 
     function _click(e) {
@@ -296,23 +286,24 @@
     }
 
 
-    function showDetail(lokasi, alumni, angkatan) {
+    function showDetail(tempatKerja, alumni, angkatan, kota) {
         var tbody = '';
-        alumni = JSON.parse(alumni)
+        var alumni = eval(alumni);
+        console.log(alumni);
         for (key in alumni) {
             if (Object.hasOwnProperty.call(alumni, key)) {
-                console.log(alumni)
                 const element = alumni[key];
                 tbody +=
                     `<tr>
                     <td>${++key}</td>
-                    <td>${element.nama}</td>
-                    <td>${element.tempat_kerja}</td>
+                    <td>${element.name}</td>
+                    <td>${element.graduation_year}</td>
                 </tr>`;
             }
         }
         $('#tbody').html(tbody);
-        $('.modal-title').text(lokasi + ' - Angkatan ' + angkatan);
+        $('.modal-title').text(tempatKerja + ' - Angkatan ' + angkatan);
+        $('.modal-description').text(kota);
     }
 
 </script>

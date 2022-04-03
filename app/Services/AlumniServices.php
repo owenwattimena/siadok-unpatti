@@ -19,13 +19,16 @@ class AlumniServices
 {
 
     // use to get list of alumni or specific alumni by nim
-    public static function getAlumnus(int $nim = null)
+    public static function getAlumnus(int $nim = null, $filter = null)
     {
         $query = DB::table('users')
             ->select(['users.*', 'alumni.entry_year', 'alumni.graduation_year', 'alumni.previous_job', 'workplaces.id as workplace_id', 'workplaces.workplace_name', 'workplaces.latitude', 'workplaces.longitude', 'cities.id as city_id', 'cities.city_name', 'cities.description'])
             ->leftJoin('alumni', 'users.id', '=', 'alumni.user_id')
             ->leftJoin('workplaces', 'alumni.workplace_id', '=', 'workplaces.id')
             ->leftJoin('cities', 'workplaces.city_id', '=', 'cities.id');
+        if($filter){
+            $query->where($filter);
+        }
         if ($nim)
             return $query
                 ->where([['nim', $nim], ['role', 'alumni']])
@@ -37,8 +40,48 @@ class AlumniServices
     // use to get list of entry year with total alumni per year
     public static function getGroupEntryYear()
     {
-        return DB::table('users')->leftJoin('alumni', 'users.id', '=', 'alumni.user_id')->where('role', 'alumni')->orderBy('alumni.entry_year', 'asc')->get()->groupBy('entry_year');
+        return DB::table('users')->join('alumni', 'users.id', '=', 'alumni.user_id')->where('role', 'alumni')->orderBy('alumni.entry_year', 'asc')->get()->groupBy('entry_year');
         // return DB::table('alumni')->select('entry_year')->distinct()->get();
+    }
+
+    public static function getGroupWorkplace($filter = null)
+    {
+        
+        $items =  Workplace::select(['workplaces.id', 'workplaces.workplace_name', 'workplaces.latitude', 'workplaces.longitude', 'cities.city_name'])
+            ->join('alumni', 'alumni.workplace_id', '=', 'workplaces.id')
+            ->leftJoin('cities', 'workplaces.city_id', '=', 'cities.id')
+            ->orderBy('workplaces.workplace_name', 'asc');
+        $items = $items->get();
+
+        foreach ($items as $item) {
+            $alumni =  DB::table('alumni')
+                ->select(['alumni.entry_year', 'alumni.graduation_year', 'alumni.previous_job','users.nim', 'users.name'])
+                ->leftJoin('users', 'users.id', '=', 'alumni.user_id')
+                ->where('alumni.workplace_id', $item->id)
+                ->orderBy('alumni.entry_year', 'asc');
+            if($filter){
+                $alumni->where($filter);
+            }
+            $alumni = $alumni->get()->groupBy('entry_year');
+            // dd($alumni);
+            $listAngkatan = [];
+            foreach ($alumni as $key => $value) {
+                $listAngkatan[] = new Collection(
+                    [
+                        'entry_year' => $key,
+                        'alumnus' => $value
+                    ]
+                );
+
+            }
+            $item->angkatan = new Collection($listAngkatan);
+        }
+
+        // foreach ($items as $item) {
+        //     $item->alumni = [$item->workplace_name . ' - ' . $item->city_name];
+        // }
+
+        return $items;
     }
 
     public static function storeAlumni(Request $request, int $nim = null): array
@@ -56,7 +99,7 @@ class AlumniServices
             $user->email          = $request->email;
             if ($nim == null) {
                 $user->password   = Hash::make($request->password);
-                $user->created_by     = auth()->user()->id;
+                $user->created_by = auth()->user()->id;
                 $user->role       = "alumni";
             }
             if ($user->save()) {
@@ -75,10 +118,9 @@ class AlumniServices
                 $alumni->previous_job       = $request->previous_job;
 
                 //check if workplace is select 
-                if ($request->workplace != null ) {
+                if ($request->workplace != null) {
                     /// Check if workplace is int its mean user choose from list of workplace
-
-                    if (is_int($request->workplace)) {
+                    if (is_int(intval($request->workplace)) && $request->workplace != 0) {
                         /// check if old workplace equal to new workplace its mean user not change workplace name
                         if ($oldData->workplace_id == $request->workplace) {
                             ///check if old lat is't equal to new lat its or old long is't equal to new long its mean user change pin location then create new workplace
@@ -96,10 +138,13 @@ class AlumniServices
                                 $alumni->workplace_id = $oldData->workplace_id;
                             }
                         } else {
+
                             /// else its mean user change new workplace
                             $newWorkplace  =  Workplace::findOrFail($request->workplace);
-                            ///check if old lat is't equal to new lat its or old long is't equal to new long its mean user change pin location then create new workplace
+                            ///check if old lat is't equal to new lat or old long is't equal to new long its mean user change pin location then create new workplace
+                            // dd($newWorkplace);
                             if ($newWorkplace->latitude != $request->latitude || $newWorkplace->longitude != $request->longitude || $oldData->city_id != $request->city_id) {
+
                                 $workplace                  =  new Workplace;
                                 $workplace->workplace_name  = $oldData->workplace_name;
                                 $workplace->latitude        = $request->latitude;
@@ -125,29 +170,15 @@ class AlumniServices
                         }
                     }
                 }
-                /// check if request workplace is't null its mean user has input workplace value
-                // if ($request->workplace != null) {
-                //     /// check if instace of Workplace is set, its mean user that user wont to create or udpate workplace 
-                //     if(isset($workplace)){
-                //         // if workplace is succesfully save set workplace id to alumni
-                //         if ($workplace->save()) {
-                //             $alumni->workplace_id       = $workplace->id;
-                //         }
-                //     }else{
-                //         /// else its mean user dont change the workplace value then use workplace old data
-                //         $alumni->workplace_id= $oldData->workplace_id;
-                //     }
-                // }
                 $alumni->save();
 
                 return AlertFormatter::success('Data Alumni Berhasil Ditambahkan');
             }
-            return AlertFormatter::danger('Data Alumni Gagal Ditambahkan');
+            return AlertFormatter::danger('Error...');
         } catch (\Throwable $e) {
             dd($e);
-            return AlertFormatter::danger('Data Alumni Gagal Ditambahkan. ' . $e->getMessage());
+            return AlertFormatter::danger('Error. ' . $e->getMessage());
             # code...
         }
-
     }
 }

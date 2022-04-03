@@ -128,6 +128,7 @@
         $('#workplace').select2({
             placeholder: "--- Masukan Tempat Kerja ---"
             , tags: []
+            ,minimumInputLength: 3
             , ajax: {
                 type: 'GET'
                 , url: `{{ url('api/v1/select2workplace') }}`
@@ -160,6 +161,7 @@
                 $('#longitude').val(response.longitude)
                 $('#latitude').trigger("change");
                 $('#longitude').trigger("change");
+                
             });
         }
     })
@@ -235,7 +237,7 @@
             , layers: [base_layer]
         , }).setView([-6.0251815, 131.1685883]);
         map.addControl(new L.Control.Fullscreen())
-        markerKabMaluku(map);
+        markerKabMaluku(L, map);
         /// OnClick on Map set value to latitude and longitude
         map.on('click', function(e) {
             if (mapDisable) {
