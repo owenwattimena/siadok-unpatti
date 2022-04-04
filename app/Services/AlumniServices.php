@@ -91,6 +91,7 @@ class AlumniServices
                 $oldData = self::getAlumnus($nim);
             }
 
+            // dd(intval($request->workplace));
 
             $user                 = $nim == null ? new User : User::where('nim', $nim)->first();
             $user->name           = $request->name;
@@ -120,9 +121,9 @@ class AlumniServices
                 //check if workplace is select 
                 if ($request->workplace != null) {
                     /// Check if workplace is int its mean user choose from list of workplace
-                    if (is_int(intval($request->workplace)) && $request->workplace != 0) {
+                    if (is_int(intval($request->workplace)) && intval($request->workplace) != 0) {
                         /// check if old workplace equal to new workplace its mean user not change workplace name
-                        if ($oldData->workplace_id == $request->workplace) {
+                        if (isset($oldData) && $oldData->workplace_id == $request->workplace) {
                             ///check if old lat is't equal to new lat its or old long is't equal to new long its mean user change pin location then create new workplace
                             if ($oldData->latitude != $request->latitude || $oldData->longitude != $request->longitude || $oldData->city_id != $request->city_id) {
                                 $workplace                  =  new Workplace;
@@ -143,7 +144,7 @@ class AlumniServices
                             $newWorkplace  =  Workplace::findOrFail($request->workplace);
                             ///check if old lat is't equal to new lat or old long is't equal to new long its mean user change pin location then create new workplace
                             // dd($newWorkplace);
-                            if ($newWorkplace->latitude != $request->latitude || $newWorkplace->longitude != $request->longitude || $oldData->city_id != $request->city_id) {
+                            if ($newWorkplace->latitude != $request->latitude || $newWorkplace->longitude != $request->longitude || ( isset($oldData) && $oldData->city_id != $request->city_id)) {
 
                                 $workplace                  =  new Workplace;
                                 $workplace->workplace_name  = $oldData->workplace_name;
