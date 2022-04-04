@@ -4,7 +4,7 @@
     <!-- Logo -->
     <a href="{{ url('/') }}" target="_blank" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class=" logo-mini"><b>SIADU</b></span>
+        <span class=" logo-mini"><b>SIADOK</b></span>
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg"><b>SI ALUMNI KEDOKTERAN</b></span>
     </a>
