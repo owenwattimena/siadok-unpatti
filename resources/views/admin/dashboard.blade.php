@@ -45,8 +45,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Peta Penempatan Alumni
-            <small></small>
+            Selamat datang, {{ auth()->user()->name }}</br>
+            <small>SISTEM INFORMASI ALUMNI KEDOKTERAN UNIVERSITAS PATTIMURA</small>
         </h1>
         <ol class="breadcrumb">
             <li class="active"><i class="fa fa-map"></i> Map</li>
