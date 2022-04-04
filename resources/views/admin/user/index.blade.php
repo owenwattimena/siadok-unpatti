@@ -12,12 +12,12 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Kota/Kabupaten
+            User
             <small></small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-            <li class="active">Kota/Kabupaten</li>
+            <li class="active">User</li>
         </ol>
     </section>
 
@@ -31,9 +31,9 @@
         @endif
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">Daftar Kota/Kabupaten</h3>
+                <h3 class="box-title">Daftar User</h3>
                 <button class="btn btn-sm bg-blue pull-right" onclick="createModal()" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Tambah</button>
-                @include('admin.city.component.modal')
+                @include('admin.user.component.modal')
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -41,13 +41,14 @@
                     <thead>
                         <tr>
                             <th style="width: 30px">#</th>
-                            <th>KOTA/KABUPATEN</th>
-                            <th>KETERANGAN</th>
+                            <th>NAMA</th>
+                            <th>EMAIL</th>
+                            <th>USERNAME</th>
                             <th>PILIHAN</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($lokasi as $key => $item)
+                        @foreach ([] as $key => $item)
                         <tr>
                             <td>{{ ++$key }}</td>
                             <td>{{ $item->city_name }}</td>

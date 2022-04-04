@@ -91,8 +91,6 @@ class AlumniServices
                 $oldData = self::getAlumnus($nim);
             }
 
-            // dd(intval($request->workplace));
-
             $user                 = $nim == null ? new User : User::where('nim', $nim)->first();
             $user->name           = $request->name;
             $user->nim            = $request->nim;

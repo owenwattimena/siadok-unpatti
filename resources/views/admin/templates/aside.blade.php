@@ -41,6 +41,7 @@
                 <ul class="treeview-menu">
                     <li class="{{ (request()->is('city*')) ? 'active' : '' }}"><a href="{{ route('city.index') }}"><i class="fa fa-map-marker"></i> Kota/Kabupaten</a></li>
                     <li class="{{ (request()->is('alumni*')) ? 'active' : '' }}"><a href="{{ route('alumni.index') }}"><i class="fa fa-users"></i> Alumni</a></li>
+                    <li class="{{ (request()->is('user*')) ? 'active' : '' }}"><a href="{{ route('user.index') }}"><i class="fa fa-user-circle"></i> User</a></li>
                 </ul>
             </li>
         </ul>

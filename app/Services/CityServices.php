@@ -14,9 +14,9 @@ class CityServices
         return DB::table('cities')->get();
     }
 
-    public static function storeCity(Request $request) : bool
+    public static function storeCity(Request $request, int $id = null) : bool
     {
-        $lokasi = new Lokasi;
+        $lokasi = $id != null ? Lokasi::findOrFail($id) : new Lokasi;
         $lokasi->city_name = $request->city;
         $lokasi->description = $request->description;
         $lokasi->created_by = auth()->user()->id;

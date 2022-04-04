@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\Admin\AlumniController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\LokasiController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Admin\AlumniController;
+use App\Http\Controllers\Admin\LokasiController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 /*
@@ -54,9 +55,9 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/dashboard/profile/change-password', [ProfileController::class, 'changePassword'])->name('dashboard.profile.password');
     Route::prefix('city')->group(function () {
         Route::get('/', [LokasiController::class, 'index'])->name('city.index');
-        Route::post('store', [LokasiController::class, 'store'])->name('city.store');
-        Route::post('{id}/update', [LokasiController::class, 'update'])->name('city.update');
-        Route::delete('{id}/delete', [LokasiController::class, 'delete'])->name('city.delete');
+        Route::post('/', [LokasiController::class, 'store'])->name('city.store');
+        Route::put('{id}', [LokasiController::class, 'update'])->name('city.update');
+        Route::delete('{id}', [LokasiController::class, 'delete'])->name('city.delete');
     });
     
     Route::prefix('alumni')->group(function () {
@@ -64,5 +65,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/', [AlumniController::class, 'store'])->name('alumni.store');
         Route::put('{id}', [AlumniController::class, 'update'])->name('alumni.update');
         Route::delete('{id}', [AlumniController::class, 'delete'])->name('alumni.delete');
+    });
+    Route::prefix('user')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('user.index');
     });
 });
