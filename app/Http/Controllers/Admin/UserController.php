@@ -11,4 +11,17 @@ class UserController extends Controller
     {
         return view('admin.user.index');
     }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            "name" => "required",
+            "email" => "required|email|unique:users,email",
+            "username" => "required|unique:users,username",
+            "password" => "required|confirmed",
+            "level" => "required|in:developer,superadmin,admin,mahasiswa"
+        ]);
+
+        dd($request);
+    }
 }
