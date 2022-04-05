@@ -14,6 +14,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        dd($request);
         $request->validate([
             "name" => "required",
             "email" => "required|email|unique:users,email",
@@ -22,6 +23,5 @@ class UserController extends Controller
             "level" => "required|in:developer,superadmin,admin,mahasiswa"
         ]);
 
-        dd($request);
     }
 }
