@@ -1,6 +1,15 @@
 {{-- Modal Style --}}
 <link rel="stylesheet" href="{{asset('assets/app-css/modal.css')}}">
-    
+<style>
+    .select2{
+        width: 100% !important;
+    }
+    .select2-selection{
+        height: 34px !important;
+        border-radius: 0!important;
+        border-color: #d2d6de!important;
+    }
+</style>
 {{-- Component Modal --}}
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog modal-lg">
