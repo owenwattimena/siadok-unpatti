@@ -34,6 +34,7 @@
                 <h3 class="box-title">Daftar User</h3>
                 <button class="btn btn-sm bg-blue pull-right" onclick="createModal()" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Tambah</button>
                 @include('admin.user.component.modal')
+                @include('admin.user.component.password-modal')
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -42,19 +43,23 @@
                         <tr>
                             <th style="width: 30px">#</th>
                             <th>NAMA</th>
-                            <th>EMAIL</th>
                             <th>USERNAME</th>
+                            <th>EMAIL</th>
+                            <th>LEVEL</th>
                             <th>PILIHAN</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ([] as $key => $item)
+                        @foreach ($users as $key => $item)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $item->city_name }}</td>
-                            <td>{{ $item->description ?? '-' }}</td>
+                            <td>{{ $item->name }}</td>
+                            <td>{{ $item->username }}</td>
+                            <td>{{ $item->email ?? '-' }}</td>
+                            <td>{{ $item->role }}</td>
                             <td>
-                                <button class="btn btn-sm bg-orange" onclick='return updateModal({{ $item->id }}, "{{ $item->city_name }}", "{{ $item->description }}")' data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
+                                <button class="btn btn-sm bg-orange" onclick='return updateModal({{ $item->id }})' data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
+                                <button class="btn btn-sm bg-black" onclick='return changePassword({{ $item->id }}' data-toggle="modal" data-target="#modal-password"><i class="fa fa-key"></i> Ubah Password</button>
                                 <form action="{{ route('city.delete', $item->id) }}" style="display: inline;" method="POST">
                                     @csrf
                                     @method('delete')
@@ -84,24 +89,43 @@
 <script src="{{ asset('assets') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script>
     $(document).ready(function() {
+        @if($errors->any())
+        setTimeout(function() {
+            $('#modal-default').modal('show');
+        }, 400);
+        @endif
         $('#example1').DataTable();
     })
     
     createModal = ()=>{
         resetForm();
+        hidePasswordField(false);
     }
     
-    updateModal = (cityId, cityName, description) => {
+    updateModal = (userId) => {
+        $('form').attr('action', `{{ url('user') }}/` + userId);
         $('input[name=_method]').val('PUT');
-        $('form').attr('action', `{{ url('city') }}/` + cityId);
-        $('.modal-title').text('Update Kota/Kabupaten');
-        $('#city').val(cityName);
-        $('#description').val(description);
+        $('.modal-title').text('Update User');
+        hidePasswordField();
     }
     resetForm = ()=>{
         $('form').trigger("reset");
-        $('form').attr('action', `{{ url('city') }}`);
+        $('form').attr('action', `{{ url('user') }}`);
         $('input[name=_method]').val('POST');
+    }
+
+    hidePasswordField = (state = true)=>{
+        if(state){
+            $('#password').hide();
+            $('#password_confirmation').hide();
+            $('label[for=password]').hide();
+            $('label[for=password_confirmation]').hide();
+        }else{
+            $('#password').show();
+            $('#password_confirmation').show();
+            $('label[for=password]').show();
+            $('label[for=password_confirmation]').show();
+        }
     }
 
 </script>

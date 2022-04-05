@@ -53,20 +53,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard/profile', [ProfileController::class, 'index'])->name('dashboard.profile');
     Route::put('/dashboard/profile', [ProfileController::class, 'updateProfile'])->name('dashboard.profile.put');
     Route::put('/dashboard/profile/change-password', [ProfileController::class, 'changePassword'])->name('dashboard.profile.password');
-    Route::prefix('city')->group(function () {
+    
+    Route::prefix('/city')->group(function () {
         Route::get('/', [LokasiController::class, 'index'])->name('city.index');
         Route::post('/', [LokasiController::class, 'store'])->name('city.store');
         Route::put('{id}', [LokasiController::class, 'update'])->name('city.update');
         Route::delete('{id}', [LokasiController::class, 'delete'])->name('city.delete');
     });
     
-    Route::prefix('alumni')->group(function () {
+    Route::prefix('/alumni')->group(function () {
         Route::get('/', [AlumniController::class, 'index'])->name('alumni.index');
         Route::post('/', [AlumniController::class, 'store'])->name('alumni.store');
         Route::put('{id}', [AlumniController::class, 'update'])->name('alumni.update');
         Route::delete('{id}', [AlumniController::class, 'delete'])->name('alumni.delete');
     });
-    Route::prefix('user')->group(function () {
+    Route::prefix('/user')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.index');
         Route::post('/', [UserController::class, 'store'])->name('user.store');
     });
