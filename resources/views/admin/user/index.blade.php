@@ -58,7 +58,7 @@
                             <td>{{ $item->email ?? '-' }}</td>
                             <td>{{ $item->role }}</td>
                             <td>
-                                <button class="btn btn-sm bg-orange" onclick='return updateModal({{ $item->id }})' data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
+                                <button class="btn btn-sm bg-orange" onclick='return updateModal({{ $item->id }}, "{{ $item->name }}", "{{ $item->username }}", "{{ $item->email }}", "{{ $item->role }}")' data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
                                 <button class="btn btn-sm bg-black" onclick='return changePassword({{ $item->id }}' data-toggle="modal" data-target="#modal-password"><i class="fa fa-key"></i> Ubah Password</button>
                                 <form action="{{ route('city.delete', $item->id) }}" style="display: inline;" method="POST">
                                     @csrf
@@ -94,6 +94,15 @@
             $('#modal-default').modal('show');
         }, 400);
         @endif
+        @if($errors->update->any())
+        @php
+            dd(old('name'));
+        @endphp
+        setTimeout(function() {
+            updateModal();
+            $('#modal-default').modal('show');
+        }, 400);
+        @endif
         $('#example1').DataTable();
     })
     
@@ -102,11 +111,18 @@
         hidePasswordField(false);
     }
     
-    updateModal = (userId) => {
+    updateModal = (userId = null, nama = null, username = null, email = null, role = null) => {
         $('form').attr('action', `{{ url('user') }}/` + userId);
         $('input[name=_method]').val('PUT');
         $('.modal-title').text('Update User');
         hidePasswordField();
+        if(userId != null)
+        {
+            $('input[name=name]').val(nama);
+            $('input[name=username]').val(username);
+            $('input[name=email]').val(email);
+            $('select[name=level]').val(role);
+        }
     }
     resetForm = ()=>{
         $('form').trigger("reset");
@@ -120,11 +136,15 @@
             $('#password_confirmation').hide();
             $('label[for=password]').hide();
             $('label[for=password_confirmation]').hide();
+            $('#password').attr('required', false);
+            $('#password_confirmation').attr('required', false);
         }else{
             $('#password').show();
             $('#password_confirmation').show();
             $('label[for=password]').show();
             $('label[for=password_confirmation]').show();
+            $('#password').attr('required', true);
+            $('#password_confirmation').attr('required', true);
         }
     }
 

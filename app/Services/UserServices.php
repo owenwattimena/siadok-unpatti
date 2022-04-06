@@ -39,13 +39,16 @@ class UserServices
         return $roles;
     }
 
-    static public function storeUser(Request $request): bool
+    static public function storeUser(Request $request, int $id = null): bool
     {
-        $user = new User;
+        $user = ($id == null) ? new User : User::findOrFail($id);
         $user->name = $request->name;
         $user->username = $request->username;
         $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        if($id == null)
+        {
+            $user->password = Hash::make($request->password);
+        }
         $user->role = $request->level ?? 'admin';
 
         if ($user->save()) {
