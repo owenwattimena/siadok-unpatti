@@ -40,8 +40,7 @@ class ReportController extends Controller
         if($request->download){
             // return view('admin.report.pdf', $data);
             $pdf = PDF::loadview('admin.report.pdf',$data)->setPaper('a4', 'landscape');
-            ;
-            return $pdf->download('laporan-pegawai-pdf');
+            return $pdf->download('laporan-alumni.pdf');
         
         }
         return view('admin.report.index', $data);
