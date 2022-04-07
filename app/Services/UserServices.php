@@ -56,4 +56,23 @@ class UserServices
         }
         return false;
     }
+
+    static public function changePassword(Request $request, int $id): bool
+    {
+        $user = User::findOrFail($id);
+        $user->password = Hash::make($request->newpassword);
+        if ($user->save()) {
+            return true;
+        }
+        return false;
+    }
+
+    static public function destroyUser(int $id) : bool
+    {
+        $user = User::findOrFail($id);
+        if ($user->delete()) {
+            return true;
+        }
+        return false;
+    }
 }

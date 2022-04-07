@@ -58,12 +58,12 @@
                             <td>{{ $item->email ?? '-' }}</td>
                             <td>{{ $item->role }}</td>
                             <td>
-                                <button class="btn btn-sm bg-orange" onclick='return updateModal({{ $item->id }}, "{{ $item->name }}", "{{ $item->username }}", "{{ $item->email }}", "{{ $item->role }}")' data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
-                                <button class="btn btn-sm bg-black" onclick='return changePassword({{ $item->id }}' data-toggle="modal" data-target="#modal-password"><i class="fa fa-key"></i> Ubah Password</button>
-                                <form action="{{ route('city.delete', $item->id) }}" style="display: inline;" method="POST">
+                                <button class="btn btn-sm bg-orange" onclick='updateModal({{ $item->id }}, "{{ $item->name }}", "{{ $item->username }}", "{{ $item->email }}", "{{ $item->role }}")' data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
+                                <button class="btn btn-sm bg-black" onclick='changePassword({{ $item->id }})' data-toggle="modal" data-target="#modal-password"><i class="fa fa-key"></i> Ubah Password</button>
+                                <form action="{{ route('user.delete', $item->id) }}" style="display: inline;" method="POST">
                                     @csrf
                                     @method('delete')
-                                    <button type="submit" class="btn btn-sm bg-red" onclick="return confirm('Yakin ingin menghapus lokasi {{ $item->city_name }}?')"><i class="fa fa-trash"></i> Hapus</button>
+                                    <button type="submit" class="btn btn-sm bg-red" onclick="return confirm('Yakin ingin menghapus user {{ $item->username }}?')"><i class="fa fa-trash"></i> Hapus</button>
                                 </form>
                             </td>
                         </tr>
@@ -89,29 +89,36 @@
 <script src="{{ asset('assets') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script>
     $(document).ready(function() {
-        @if($errors->any())
-        setTimeout(function() {
-            $('#modal-default').modal('show');
-        }, 400);
-        @endif
+        
+
         @if($errors->update->any())
-        @php
-            dd(old('name'));
-        @endphp
-        setTimeout(function() {
-            updateModal();
-            $('#modal-default').modal('show');
-        }, 400);
+            setTimeout(function() {
+                updateModal();
+                $('#modal-default').modal('show');
+            }, 400);
+
+        @elseif($errors->password->any())
+            changePassword(`{{ old('user_id') }}`);
+            $('#modal-password').modal('show');
+        @elseif($errors->any())
+            setTimeout(function() {
+                $('#modal-default').modal('show');
+            }, 400);
         @endif
         $('#example1').DataTable();
     })
     
     createModal = ()=>{
         resetForm();
+        $('.modal-title').text('Tambah User');
         hidePasswordField(false);
     }
+    changePassword = (id)=>{
+        $('#user_id_form').val(id);
+        $('#form-password').attr('action', `{{ url('user/change-password') }}/` + id);
+    }
     
-    updateModal = (userId = null, nama = null, username = null, email = null, role = null) => {
+    function updateModal(userId = null, nama = null, username = null, email = null, role = null){
         $('form').attr('action', `{{ url('user') }}/` + userId);
         $('input[name=_method]').val('PUT');
         $('.modal-title').text('Update User');
@@ -124,8 +131,12 @@
             $('select[name=level]').val(role);
         }
     }
-    resetForm = ()=>{
-        $('form').trigger("reset");
+    function resetForm(){
+        $('#form')[0].reset();
+        $('input[name=name]').val("");
+        $('input[name=username]').val("");
+        $('input[name=email]').val("");
+        $('select[name=level]').val("admin");
         $('form').attr('action', `{{ url('user') }}`);
         $('input[name=_method]').val('POST');
     }

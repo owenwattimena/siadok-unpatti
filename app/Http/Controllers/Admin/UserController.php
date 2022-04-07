@@ -38,21 +38,44 @@ class UserController extends Controller
         $rules = [
             "name" => "required",
             "email" => "required|email",
-            "username" => "required|unique:users,username," . auth()->user()->id,
+            "username" => "required|unique:users,username," . $id,
             "level" => "required|in:developer,superadmin,admin,mahasiswa"
         ];
 
         $validator = Validator::make($request->all(), $rules);
 
         if($validator->fails()){
-            return back()->withErrors($validator, 'update');
-
+            return back()->withErrors($validator, 'update')->withInput();
         }
-
         if (UserServices::storeUser($request, $id)) {
             return redirect()->back()->with(AlertFormatter::success('User berhasil di ubah'));
         }
         return redirect()->back()->with(AlertFormatter::danger('User gagal di ubah'));
+    }
 
+    public function changePassword(Request $request, $id)
+    {
+        $rule = [
+            "newpassword" => "required|confirmed"
+        ];
+
+        $validator = Validator::make($request->all(), $rule);
+
+        if($validator->fails()){
+            return back()->withErrors($validator, 'password')->withInput();
+        }
+
+        if (UserServices::changePassword($request, $id)) {
+            return redirect()->back()->with(AlertFormatter::success('Password berhasil di ubah'));
+        }
+        return redirect()->back()->with(AlertFormatter::danger('Password gagal di ubah'));
+    }
+
+    public function destroy($id)
+    {
+        if (UserServices::destroyUser($id)) {
+            return redirect()->back()->with(AlertFormatter::success('User berhasil di hapus'));
+        }
+        return redirect()->back()->with(AlertFormatter::danger('User gagal di hapus'));
     }
 }

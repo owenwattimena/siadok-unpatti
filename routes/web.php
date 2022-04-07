@@ -71,5 +71,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.index');
         Route::post('/', [UserController::class, 'store'])->name('user.store');
         Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
+        Route::put('/change-password/{id}', [UserController::class, 'changePassword'])->name('user.password');
+        Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.delete');
     });
 });

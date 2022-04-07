@@ -3,9 +3,10 @@
 <div class="modal fade" id="modal-password">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{ route('user.store') }}" method="post">
+            <form action="#" method="post" id="form-password">
                 @csrf
-                @method('post')
+                @method('put')
+                <input type="hidden" name="user_id" id="user_id_form">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -17,18 +18,15 @@
                         <div class="col-md-2"></div>
                         <div class="col-md-8">
                             <div class="form-group">
-                                <label for="new_password">Password Baru</label>
-                                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="[Password Baru]" required>
-                                @error('new_password')
-                                    <span class="text-red">{{ $message }}</span>
-                                @enderror
+                                <label for="newpassword">Password Baru</label>
+                                <input type="password" class="form-control" id="newpassword" name="newpassword" placeholder="[Password Baru]" required>
                             </div>
                             <div class="form-group">
                                 <label for="new_password_confirmation">Konfirmasi Password Baru</label>
-                                <input type="password" class="form-control" id="new_password_confirmation" name="new_password_confirmation" placeholder="[Konfirmasi Password Baru]" required>
-                                @error('new_password_confirmation')
-                                    <span class="text-red">{{ $message }}</span>
-                                @enderror
+                                <input type="password" class="form-control" id="newpassword_confirmation" name="newpassword_confirmation" placeholder="[Konfirmasi Password Baru]" required>
+                                @if($errors->password->has('newpassword'))
+                                    <span class="text-red">{{ $errors->password->first('newpassword') }}</span>
+                                @endif
                             </div>
                             
                         </div>

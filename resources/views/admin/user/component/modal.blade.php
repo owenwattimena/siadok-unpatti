@@ -5,7 +5,7 @@
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{ route('user.store') }}" method="post">
+            <form action="{{ route('user.store') }}" method="post" id="form">
                 @csrf
                 @method('post')
                 <div class="modal-header">
@@ -38,6 +38,9 @@
                                 @error('username')
                                     <span class="text-red">{{ $message }}</span>
                                 @enderror
+                                @if($errors->update->has('username'))
+                                    <span class="text-red">{{ $errors->update->first('username') }}</span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="password">Password</label>
