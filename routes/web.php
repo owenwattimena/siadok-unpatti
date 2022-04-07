@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AlumniController;
 use App\Http\Controllers\Admin\LokasiController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -73,5 +74,12 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
         Route::put('/change-password/{id}', [UserController::class, 'changePassword'])->name('user.password');
         Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.delete');
+    });
+    Route::prefix('/report')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('report.index');
+        // Route::post('/', [UserController::class, 'store'])->name('user.store');
+        // Route::put('/{id}', [UserController::class, 'update'])->name('user.update');
+        // Route::put('/change-password/{id}', [UserController::class, 'changePassword'])->name('user.password');
+        // Route::delete('/{id}', [UserController::class, 'destroy'])->name('user.delete');
     });
 });
