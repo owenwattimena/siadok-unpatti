@@ -1,4 +1,4 @@
-<!-- Control Sidebar -->
+{{-- <!-- Control Sidebar -->
 <aside class="control-sidebar control-sidebar-dark">
     <!-- Create the tabs -->
     <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
@@ -71,4 +71,4 @@
         <!-- /.tab-pane -->
     </div>
 </aside>
-<!-- /.control-sidebar -->
+<!-- /.control-sidebar --> --}}

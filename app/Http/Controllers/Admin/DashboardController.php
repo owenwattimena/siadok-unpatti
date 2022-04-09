@@ -12,14 +12,23 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $filter = [];
-        if ($request->has('entry_year')) {
-            $filter['entry_year'] = $request->query('entry_year');
+        if(auth()->user()->role != 'alumni'){
+
+            $filter = [];
+
+            if ($request->has('entry_year')) {
+                $filter['entry_year'] = $request->query('entry_year');
+            }
+
+            $data['alumni'] = AlumniServices::getAlumnus(null, $filter);
+            $data['lokasi'] = AlumniServices::getGroupWorkplace($filter);
+
+            $data['entryYear'] = AlumniServices::getGroupEntryYear();
+            return view('admin.dashboard', $data);
+
+        }else{
+            $data['lokasi'] = Lokasi::all();
+            return view('alumni.dashboard.index', $data);
         }
-        $data['alumni'] = AlumniServices::getAlumnus(null, $filter);
-        $data['lokasi'] = AlumniServices::getGroupWorkplace($filter);
-        // dd($data);
-        $data['entryYear'] = AlumniServices::getGroupEntryYear();
-        return view('admin.dashboard', $data);
     }
 }
