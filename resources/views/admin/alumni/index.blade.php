@@ -358,6 +358,7 @@
         showPasswordFiled(false);
         var ajax = ajaxGet(`{{ url('api/v1/alumni?nim=') }}${nim}`);
         ajax.done(function(result) {
+            console.log(result);
             setFormValue(result);
         });
     }
