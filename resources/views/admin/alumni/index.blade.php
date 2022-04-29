@@ -38,12 +38,30 @@
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Daftar Alumni</h3>
-                <button class="btn btn-sm bg-blue pull-right" onclick="createMode()" data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus"></i> Tambah</button>
-                @include('admin.alumni.component.create_modal')
-                <!-- /.modal -->
+                <button class="btn btn-sm bg-blue pull-right" onclick="createMode()"><i class="fa fa-plus"></i> Tambah/Update</button>
+                <div class="box hide" style="margin-top: 15px" id="import-box">
+                    <div class="box-body">
+                        <form action="{{ route('alumni.import') }}" enctype="multipart/form-data" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label for="import">Import</label>
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <input type="file" class="form-control" name="file" id="import" placeholder="Pilih File" required>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button type="submit" class="btn btn-primary">IMPORT</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
+                <!-- /.modal -->
+                @include('admin.alumni.component.create_modal')
                 <div class="table-responsive">
 
                     <table id="example1" class="table table-bordered table-striped">
@@ -64,18 +82,18 @@
                             <tr>
                                 <td>{{ ++$key }}</td>
                                 <td>{{ $item->nim }}</td>
-                                <td>{{ $item->name }}</td>
-                                <td>{{ $item->entry_year ?? '-' }}</td>
-                                <td>{{ $item->graduation_year ?? '-'}}</td>
-                                <td>{{ $item->workplace_name ?? '-'}}</td>
-                                <td>{{ $item->city_name ?? '-'}}</td>
+                                <td>{{ $item->nama_lengkap }}</td>
+                                <td>{{ $item->tahun_masuk_s1 ?? '-' }}</td>
+                                <td>{{ $item->tahun_lulus_s1 ?? '-'}}</td>
+                                <td>{{ $item->jalan ?? '-'}}</td>
+                                <td>{{ $item->kabupaten_kota ?? '-'}}</td>
                                 <td>
                                     <button class="btn btn-sm bg-blue" onclick="return detailMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-list"></i> Detail</button>
                                     <button class="btn btn-sm bg-orange" onclick="return updateMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
                                     <form action="{{ route('alumni.delete', $item->id) }}" style="display: inline;" method="POST">
                                         @csrf
                                         @method('delete')
-                                        <button type="submit" class="btn btn-sm bg-red" onclick="return confirm('Yakin ingin menghapus alumni {{ $item->name }}?')"><i class="fa fa-trash"></i> Hapus</button>
+                                        <button type="submit" class="btn btn-sm bg-red" onclick="return confirm('Yakin ingin menghapus alumni {{ $item->nama_lengkap }}?')"><i class="fa fa-trash"></i> Hapus</button>
                                     </form>
                                 </td>
                             </tr>
@@ -119,7 +137,7 @@
             $('#modal-default').modal('show');
         }, 400);
         @endif
-        @if($errors->has('city_id')||$errors->has('latitude')||$errors->has('longitude'))
+        @if($errors->has('city_id') || $errors-> has('latitude') || $errors-> has('longitude'))
         showCityMap();
         @else
         showCityMap(false);
@@ -128,7 +146,7 @@
         $('#workplace').select2({
             placeholder: "--- Masukan Tempat Kerja ---"
             , tags: []
-            ,minimumInputLength: 3
+            , minimumInputLength: 3
             , ajax: {
                 type: 'GET'
                 , url: `{{ url('api/v1/select2workplace') }}`
@@ -161,7 +179,7 @@
                 $('#longitude').val(response.longitude)
                 $('#latitude').trigger("change");
                 $('#longitude').trigger("change");
-                
+
             });
         }
     })
@@ -336,15 +354,16 @@
     }
 
     function createMode() {
-        $('.modal-title').text('Tambah Alumni');
-        $('form').attr('action', `{{ url('alumni') }}`);
-        $('input[name=_method]').val('POST');
-        disableForm(false)
-        showCityMap(false);
-        mapDisable = false
-        map.dragging.enable();
-        showPasswordFiled();
-        setFormValue();
+        $('#import-box').toggleClass('hide');
+        // $('.modal-title').text('Tambah Alumni');
+        // $('form').attr('action', `{{ url('alumni') }}`);
+        // $('input[name=_method]').val('POST');
+        // disableForm(false)
+        // showCityMap(false);
+        // mapDisable = false
+        // map.dragging.enable();
+        // showPasswordFiled();
+        // setFormValue();
     }
 
     function updateMode(nim) {

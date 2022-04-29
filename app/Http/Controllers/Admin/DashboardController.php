@@ -17,11 +17,11 @@ class DashboardController extends Controller
             $filter = [];
 
             if ($request->has('entry_year')) {
-                $filter['entry_year'] = $request->query('entry_year');
+                $filter['tahun_masuk_s1'] = $request->query('entry_year');
             }
 
             $data['alumni'] = AlumniServices::getAlumnus(null, $filter);
-            $data['lokasi'] = AlumniServices::getGroupWorkplace($filter);
+            // $data['lokasi'] = AlumniServices::getGroupWorkplace($filter);
 
             $data['entryYear'] = AlumniServices::getGroupEntryYear();
             return view('admin.dashboard', $data);

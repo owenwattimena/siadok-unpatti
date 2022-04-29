@@ -16,42 +16,20 @@ class AlumniController extends Controller
     public function index()
     {
         $alumni = AlumniServices::getAlumnus();
-        $lokasi = CityServices::getCities();
+        // $lokasi = CityServices::getCities();
         $data['alumni'] = $alumni;
-        $data['lokasi'] = $lokasi;
+        // $data['lokasi'] = $lokasi;
         return view('admin.alumni.index', $data);
     }
 
-    public function store(Request $request)
+    public function import(Request $request)
     {
         $request->validate([
-            'name' => 'required',
-            'nim' => 'required|numeric|unique:users,nim',
-            'password' => 'required|confirmed',
-            'email' => 'required|string|email|max:255|unique:users,email',
+            'file' => 'required',
         ]);
 
-        if($request->workplace != null){
-            $request->validate([
-                'city_id' => 'required',
-                'latitude' => 'required',
-                'longitude' => 'required',
-            ]);
-        }
-        if($request->city_id != null){
-            $request->validate([
-                'workplace' => 'required',
-                'latitude' => 'required',
-                'longitude' => 'required',
-            ]);
-        }
-
-        $result = AlumniServices::storeAlumni($request);
-        if($result['status'] == 'success')
-        {
-            return redirect()->back()->with($result);
-        }
-        return redirect()->back()->with($result);
+        $result = AlumniServices::import($request);
+        return redirect()->back();
     }
 
     public function update(Request $request, $id)

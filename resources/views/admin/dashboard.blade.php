@@ -139,11 +139,11 @@
                                         <tr>
                                             <td>{{ ++$key }}</td>
                                             <td>{{ $item->nim }}</td>
-                                            <td>{{ $item->name }}</td>
-                                            <td>{{ $item->entry_year ?? '-' }}</td>
-                                            <td>{{ $item->graduation_year ?? '-'}}</td>
-                                            <td>{{ $item->workplace_name ?? '-'}}</td>
-                                            <td>{{ $item->city_name ?? '-'}}</td>
+                                            <td>{{ $item->nama_lengkap }}</td>
+                                            <td>{{ $item->tahun_masuk_s1 ?? '-' }}</td>
+                                            <td>{{ $item->tahun_lulus_s1 ?? '-'}}</td>
+                                            <td>{{ $item->jalan ?? '-'}}</td>
+                                            <td>{{ $item->kabupaten_kota ?? '-'}}</td>
                                             {{-- <td>
                                                 <button class="btn btn-sm bg-blue" onclick="return detailMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-list"></i> Detail</button>
                                             </td> --}}
@@ -191,7 +191,6 @@
             // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
         });
 
-        var lokasi = @json($lokasi);
         var base_layer, map, mbAttr, mbUrl;
 
         mbAttr = 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';

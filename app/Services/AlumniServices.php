@@ -6,11 +6,13 @@ use App\Models\User;
 use App\Models\Alumni;
 use App\Models\Workplace;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\AlumniImport;
 use App\Helpers\AlertFormatter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Collection;
 use phpDocumentor\Reflection\Types\Null_;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * This class is use to get all about alumnus
@@ -21,26 +23,25 @@ class AlumniServices
     // use to get list of alumni or specific alumni by nim
     public static function getAlumnus(int $nim = null, $filter = null)
     {
-        $query = DB::table('users')
-            ->select(['users.*', 'alumni.entry_year', 'alumni.graduation_year', 'alumni.previous_job', 'workplaces.id as workplace_id', 'workplaces.workplace_name', 'workplaces.latitude', 'workplaces.longitude', 'cities.id as city_id', 'cities.city_name', 'cities.description'])
-            ->leftJoin('alumni', 'users.id', '=', 'alumni.user_id')
-            ->leftJoin('workplaces', 'alumni.workplace_id', '=', 'workplaces.id')
-            ->leftJoin('cities', 'workplaces.city_id', '=', 'cities.id');
+        $query = DB::table('alumni');
+            // ->select(['users.*', 'alumni.entry_year', 'alumni.graduation_year', 'alumni.previous_job', 'workplaces.id as workplace_id', 'workplaces.workplace_name', 'workplaces.latitude', 'workplaces.longitude', 'cities.id as city_id', 'cities.city_name', 'cities.description'])
+            // ->leftJoin('alumni', 'users.id', '=', 'alumni.user_id')
+            // ->leftJoin('workplaces', 'alumni.workplace_id', '=', 'workplaces.id')
+            // ->leftJoin('cities', 'workplaces.city_id', '=', 'cities.id');
         if($filter){
             $query->where($filter);
         }
         if ($nim)
             return $query
-                ->where([['nim', $nim], ['role', 'alumni']])
+                ->where([['nim', $nim]])
                 ->first();
         return $query
-            ->where([['role', 'alumni']])
             ->get();
     }
     // use to get list of entry year with total alumni per year
     public static function getGroupEntryYear()
     {
-        return DB::table('users')->join('alumni', 'users.id', '=', 'alumni.user_id')->where('role', 'alumni')->orderBy('alumni.entry_year', 'asc')->get()->groupBy('entry_year');
+        return DB::table('alumni')->orderBy('alumni.tahun_masuk_s1', 'asc')->get()->groupBy('tahun_masuk_s1');
         // return DB::table('alumni')->select('entry_year')->distinct()->get();
     }
 
@@ -82,6 +83,11 @@ class AlumniServices
         // }
 
         return $items;
+    }
+
+    public static function import(Request $requset)
+    {
+        Excel::import(new AlumniImport, $requset->file('file'));
     }
 
     public static function storeAlumni(Request $request, int $nim = null): array

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\AlumniController;
-use App\Http\Controllers\Admin\LokasiController;
+// use App\Http\Controllers\Admin\LokasiController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -56,16 +56,16 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/dashboard/profile/change-password', [ProfileController::class, 'changePassword'])->name('dashboard.profile.password');
 
     Route::middleware(['not.alumni'])->group(function(){
-        Route::prefix('/city')->group(function () {
-            Route::get('/', [LokasiController::class, 'index'])->name('city.index');
-            Route::post('/', [LokasiController::class, 'store'])->name('city.store');
-            Route::put('{id}', [LokasiController::class, 'update'])->name('city.update');
-            Route::delete('{id}', [LokasiController::class, 'delete'])->name('city.delete');
-        });
+        // Route::prefix('/city')->group(function () {
+        //     Route::get('/', [LokasiController::class, 'index'])->name('city.index');
+        //     Route::post('/', [LokasiController::class, 'store'])->name('city.store');
+        //     Route::put('{id}', [LokasiController::class, 'update'])->name('city.update');
+        //     Route::delete('{id}', [LokasiController::class, 'delete'])->name('city.delete');
+        // });
     
         Route::prefix('/alumni')->group(function () {
             Route::get('/', [AlumniController::class, 'index'])->name('alumni.index');
-            Route::post('/', [AlumniController::class, 'store'])->name('alumni.store');
+            Route::post('/', [AlumniController::class, 'import'])->name('alumni.import');
             Route::put('{id}', [AlumniController::class, 'update'])->name('alumni.update');
             Route::delete('{id}', [AlumniController::class, 'delete'])->name('alumni.delete');
         });

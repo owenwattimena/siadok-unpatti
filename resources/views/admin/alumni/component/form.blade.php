@@ -82,7 +82,7 @@
             <label for="city_id">Kota/Kabupaten</label>
             <select min="2000" max="3000" class="form-control" id="city_id" name="city_id">
                 <option>--- pilih Kota/Kabupaten ---</option>
-                @foreach ($lokasi as $item)
+                @foreach ([] as $item)
                 <option value="{{ $item->id }}">{{ $item->city_name }}</option>
                 @endforeach
             </select>

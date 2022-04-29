@@ -10,15 +10,8 @@ class Alumni extends Model
 {
     use HasFactory;
 
-    protected $table='alumni';
+    protected $table ='alumni';
 
-    /**
-     * Get the lokasi associated with the Alumni
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function lokasi()
-    {
-        return $this->belongsTo(Lokasi::class, 'lokasi_id', 'id');
-    }
+    // protected $fillable = ['email'];
+
 }

@@ -5,7 +5,7 @@
 <div class="modal fade" id="modal-default">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form action="{{ route('alumni.store') }}" method="post" class="form" id="form">
+            <form action="{{ route('alumni.import') }}" method="post" class="form" id="form">
                 @csrf
                 @method('POST')
                 <div class="modal-header">
