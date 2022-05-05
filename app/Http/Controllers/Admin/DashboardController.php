@@ -21,9 +21,10 @@ class DashboardController extends Controller
             }
 
             $data['alumni'] = AlumniServices::getAlumnus(null, $filter);
-            // $data['lokasi'] = AlumniServices::getGroupWorkplace($filter);
+            $data['lokasi'] = AlumniServices::getGroupWorkplace($filter);
 
             $data['entryYear'] = AlumniServices::getGroupEntryYear();
+            // dd($data['lokasi']);
             return view('admin.dashboard', $data);
 
         }else{

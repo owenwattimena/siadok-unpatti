@@ -52,8 +52,18 @@ class AlumniController extends Controller
 
     public function delete($id)
     {
-        if(User::where('id', $id)->delete())
+        $alumni = Alumni::findOrFail($id);
+        if(Alumni::where('id', $id)->delete())
         {
+            $directoryPath = 'public/profile-picture';
+            if($alumni->photo != null)
+            {
+                $path = public_path($directoryPath .'/'.$alumni->photo);
+                if(file_exists($path))
+                {
+                    unlink($path);
+                }
+            }
             return redirect()->back()->with(AlertFormatter::success('Data Alumni Berhasil Dihapus'));
         }
         {
@@ -68,5 +78,34 @@ class AlumniController extends Controller
         $alumni = AlumniServices::getAlumnus($request->query('nim'));
         return response()->json($alumni);
     }
-
+    
+    public function changePhotoProfile(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        $alumni = Alumni::where('nim', $request->nim)->first();
+        if(!$alumni)
+        {
+            return response()->json(['status' => 'error', 'message' => 'Alumni tidak ditemukan']);
+        }
+        $directoryPath = 'public/profile-picture';
+        if($alumni->photo != null)
+        {
+            $path = public_path($directoryPath .'/'.$alumni->photo);
+            if(file_exists($path))
+            {
+                unlink($path);
+            }
+        }
+        $file = $request->file('photo');
+        $profileImage = date('YmdHis') . "." . $file->getClientOriginalExtension();
+        $file->move($directoryPath, $profileImage);
+        $alumni->photo = $profileImage;
+        if($alumni->save())
+        {
+            return response()->json(['status' => 'success', 'message' => 'Foto Profil Berhasil Diubah', 'photo' => $profileImage]);
+        }
+        return response()->json(['status' => 'error', 'message' => 'Foto Profil Gagal Diubah']);
+    }
 }

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ asset('assets') }}/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 <!-- Select2 -->
 {{-- <link rel="stylesheet" href="{{ asset('assets/bower_components/select2/dist/css/select2.min.css') }}"> --}}
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
 @endsection
 
 @section('body')
@@ -70,8 +70,8 @@
                                 <th style="width: 10px">#</th>
                                 <th>NIM</th>
                                 <th>NAMA</th>
-                                <th>TAHUN MASUK</th>
-                                <th>TAHUN LULUS</th>
+                                <th>TAHUN MASUK S1</th>
+                                <th>TAHUN LULUS S1</th>
                                 <th>TEMPAT KERJA</th>
                                 <th>KOTA/KABUPATEN</th>
                                 <th>AKSI</th>
@@ -85,11 +85,11 @@
                                 <td>{{ $item->nama_lengkap }}</td>
                                 <td>{{ $item->tahun_masuk_s1 ?? '-' }}</td>
                                 <td>{{ $item->tahun_lulus_s1 ?? '-'}}</td>
-                                <td>{{ $item->jalan ?? '-'}}</td>
-                                <td>{{ $item->kabupaten_kota ?? '-'}}</td>
+                                <td>{{ $item->tempat_kerja ?? '-'}}</td>
+                                <td>{{ $item->kota_kabupaten ?? '-'}}</td>
                                 <td>
                                     <button class="btn btn-sm bg-blue" onclick="return detailMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-list"></i> Detail</button>
-                                    <button class="btn btn-sm bg-orange" onclick="return updateMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button>
+                                    {{-- <button class="btn btn-sm bg-orange" onclick="return updateMode({{ $item->nim }})" data-toggle="modal" data-target="#modal-default"><i class="fa fa-edit"></i> Ubah</button> --}}
                                     <form action="{{ route('alumni.delete', $item->id) }}" style="display: inline;" method="POST">
                                         @csrf
                                         @method('delete')
@@ -122,7 +122,7 @@
 <script src="{{ asset('assets') }}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <!-- select2 -->
 {{-- <script src="{{ asset('assets/bower_components/select2/dist/js/select2.full.min.js') }}"></script> --}}
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
 <!-- ajaxPost -->
 <script src="{{ asset('assets/app-js/appAjax.js') }}"></script>
 <script src="{{ asset('assets/app-js/markerKabMaluku.js') }}"></script>
@@ -143,56 +143,27 @@
         showCityMap(false);
         @endif
         initMap();
-        $('#workplace').select2({
-            placeholder: "--- Masukan Tempat Kerja ---"
-            , tags: []
-            , minimumInputLength: 3
-            , ajax: {
-                type: 'GET'
-                , url: `{{ url('api/v1/select2workplace') }}`
-                , dataType: 'json'
-                , data: function(params) {
-                    var query = {
-                        workplace: params.term
-                    }
-                    // Query parameters will be ?workplace=[term]
-                    return query;
-                }
-                , processResults: function(data) {
-                    return {
-                        results: data
-                    };
-                }
-            }
+
+        $('#upload-image-form').on('submit', function(e){
+            e.preventDefault();
+            var formData = new FormData(this);
+            var ajax = ajaxPost(`{{ url('api/v1/alumni/image') }}`, formData);
+            ajax.done(function(result){
+                $(".img-circle").attr('src', `{{ asset('public/profile-picture') }}/` + result.photo);
+            })
         });
     })
 
-    $('#workplace').on('select2:select', function(e) {
-        showCityMap();
-        var data = e.params.data;
-        if (Number.isInteger(data.id)) {
-            var ajax = ajaxGet(`{{ url('api/v1/workplace?id=') }}${data.id}`);
-            ajax.done(function(response) {
-                // console.log(response)
-                $('#city_id').val(response.city_id)
-                $('#latitude').val(response.latitude)
-                $('#longitude').val(response.longitude)
-                $('#latitude').trigger("change");
-                $('#longitude').trigger("change");
-
-            });
-        }
-    })
-
     function disableForm(state) {
-        $('form input').prop("disabled", state);
-        $('form textarea').prop("disabled", state);
-        $('form select').prop("disabled", state);
-        if (state) {
-            $('.modal-footer').hide();
-        } else {
-            $('.modal-footer').show();
-        }
+        // $('form input').prop("disabled", state);
+        // $('form textarea').prop("disabled", state);
+        // $('form select').prop("disabled", state);
+        // if (state) {
+        //     $('.modal-footer').hide();
+        // } else {
+        //     $('.modal-footer').show();
+        // }
+        // $('#upload-image-form input').prop("disabled", false);
     }
 
     function showPasswordFiled(state = true) {
@@ -301,7 +272,7 @@
 
     function detailMode(nim) {
         $('.modal-title').text('Detail Alumni');
-        disableForm(true)
+        // disableForm(true)
         showCityMap();
         mapDisable = true
         map.dragging.disable();
@@ -313,26 +284,23 @@
     }
 
     function setFormValue(data, isDetail = false) {
-        var workplace = $('#workplace');
         if (data != null) {
-            $("#name").val(data.name);
+            console.log(data.photo);
+            if(data.photo != null)
+            {
+                $(".img-circle").attr('src', `{{ asset('public/profile-picture') }}/` + data.photo);
+            }else{
+                $(".img-circle").attr('src',`{{ asset('assets/img/no-profile-image.png') }}`);
+            }
+            $("#name").val(data.nama_lengkap);
+            $("#h_nim").val(data.nim);
             $("#nim").val(data.nim);
             $("#email").val(data.email);
-            $("#entry_year").val(data.entry_year);
-            $("#graduation_year").val(data.graduation_year);
-            $("#previous_job").val(data.previous_job);
-            if (data.workplace_name != null) {
-                var option = new Option(data.workplace_name, data.workplace_id, true, true);
-                workplace.append(option).trigger('change');
-            } else {
-                var option = new Option(isDetail ? '-' : '', isDetail ? '-' : '', true, true);
-                workplace.append(option).trigger('change');
-            }
-            if (data.city_id != null) {
-                $('#city_id').val(data.city_id);
-            } else {
-                $('#city_id').val('-');
-            }
+            $("#entry_year").val(data.tahun_masuk_s1);
+            $("#graduation_year").val(data.tahun_lulus_s1);
+            $("#previous_job").val(data.wahana_internship);
+            $("#workplace").val(data.tempat_kerja);
+            $("#city").val(data.kota_kabupaten);
             $("#latitude").val(data.latitude);
             $("#longitude").val(data.longitude);
             $("#latitude").trigger("change");
@@ -344,9 +312,8 @@
             $("#entry_year").val('');
             $("#graduation_year").val('');
             $("#previous_job").val('');
-            var option = new Option('', '', true, true);
-            workplace.append(option).trigger('change');
-            $('#city_id').val('');
+            $('#workplace').val('');
+            $('#city').val('');
             $("#latitude").val(null);
             $("#longitude").val(null);
             map.removeLayer(marker);

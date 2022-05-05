@@ -19,6 +19,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('select2workplace', [WorkplaceController::class, 'getSelect2Workplace']);
     Route::get('workplace', [WorkplaceController::class, 'getWorkplace'])->name('api-workplace');
     Route::get('alumni', [AlumniController::class, 'getAlumni'])->name('api-alumni');
+    Route::post('alumni/image', [AlumniController::class, 'changePhotoProfile']);
 });
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

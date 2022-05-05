@@ -7,6 +7,7 @@
 </head>
 <body>
     <style type="text/css">
+        body { margin: 0px; }
         * {
             font-family: Arial, Helvetica, sans-serif !important;
             font-size: 12px !important;
@@ -20,18 +21,18 @@
         #table,
         #table th,
         #table td {
-            border: 1px solid black !important;
+            border: 0.3px solid #444444 !important;
         }
-        .border-hide {
-            border-left-color: white !important;
-            border-bottom-color: white !important;
+        #table th, .center{
+            text-align: center;
         }
     </style>
     <center>
         <h1>LAPORAN ALUMNI<br>MAHASISWA KEDOKTERAN<br>UNIVERSITAS PATTIMURA</h1>
     </center>
     {!! $filter !!}
-    <table class='table table-bordered'>
+    <br>
+    <table class='table table-bordered' id="table">
         <thead>
             <tr>
                 <th style="width: 30px">NO</th>
@@ -41,21 +42,21 @@
                 <th>TAHUN LULUS</th>
                 <th>KOTA</th>
                 <th>TEMPAT KERJA</th>
-                <th>PEKERJAAN SEBELUMNYA</th>
+                <th>WAHANA INTERNSHIP</th>
             </tr>
         </thead>
         <tbody>
             @php $i=1 @endphp
             @foreach ($alumnus as $key => $item)
             <tr>
-                <td>{{ $i++ }}</td>
-                <td>{{ $item->nim }}</td>
-                <td>{{ $item->name }}</td>
-                <td>{{ $item->entry_year }}</td>
-                <td>{{ $item->graduation_year }}</td>
-                <td>{{ $item->city_name }}</td>
-                <td>{{ $item->workplace_name }}</td>
-                <td>{{ $item->previous_job }}</td>
+                <td class="center">{{ $i++ }}</td>
+                <td class="center">{{ $item->nim }}</td>
+                <td>{{ $item->nama_lengkap }}</td>
+                <td class="center">{{ $item->tahun_masuk_s1 }}</td>
+                <td class="center">{{ $item->tahun_lulus_s1 }}</td>
+                <td>{{ $item->kota_kabupaten }}</td>
+                <td>{{ $item->tempat_kerja }}</td>
+                <td>{{ $item->wahana_internship }}</td>
             </tr>
             @endforeach
         </tbody>

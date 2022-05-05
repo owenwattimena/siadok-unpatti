@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class CityServices
 {
-    public static function getCities(int $id = null)
+    public static function getCities(String $kota_kabupaten = null)
     {
-        if ($id) return DB::table('cities')->where('id', $id)->get();
-        return DB::table('cities')->get();
+        if ($kota_kabupaten) return DB::table('alumni')->select('kota_kabupaten_tempat_pekerjaan_utama as kota_kabupaten')->where('kota_kabupaten_tempat_pekerjaan_utama', $kota_kabupaten)->distinct()->get();
+        return DB::table('alumni')->select('kota_kabupaten_tempat_pekerjaan_utama as kota_kabupaten')->distinct()->get();
     }
 
     public static function storeCity(Request $request, int $id = null) : bool

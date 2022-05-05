@@ -18,6 +18,7 @@ class AlumniImport implements ToCollection, WithHeadingRow
     public function collection(Collection $rows)
     {
         foreach($rows as $row){
+            // dd($row);
             $timestamp = $row['tanggal_lahir'];
             $tanggal_lahir = date('Y-m-d', mktime(0,0,0,1,$timestamp-1,1900));
             $data = [
@@ -59,10 +60,48 @@ class AlumniImport implements ToCollection, WithHeadingRow
                 'tahun_mulai_bekerja' => $row['tahun_mulai_bekerja'],
                 'bagaimana_cara_mendapatkan_pekerjaan_pertama' => $row['bagaimana_cara_anda_mendapatkan_pekerjaan_pertama'],
                 'berapa_perusahaan_yang_merespons_lamaran_anda' => $row['berapa_perusahaaninstansiinstitusi_yang_sudah_anda_lamar_lewat_surat_atau_e_mail_sebelum_anda_memperoleh_pekerjaan_pertama'],
-                
-                
+                'pernahkah_anda_berpindah_perusahaan_tempat_bekerja' => $row['pernahkah_anda_berpindah_perusahaaninstansiinstitusi_tempat_bekerja'],
+                'nama_istitusi_tempat_anda_pernah_bekerja' => $row['nama_istitusi_tempat_anda_pernah_bekerja'],
+                'alasan_anda_pindah_tempat_pekerjaan' => $row['apa_alasan_anda_tempat_pindah_pekerjaan'],
+                'leval_tingkatan_tempat_anda_bekerja' => $row['apakah_level_tingkaan_tempat_anda_bekerja'],
+                'kesesuaian_bidang_studi_dengan_perkerjaan_anda_sekarang' => $row['bagaimanakah_kesesuaian_bidang_studi_anda_dengan_perkerjaan_anda_sekarang'],
+                'status_pekerjaan_utama_saat_ini' => $row['status_pekerjaan_utama_saat_ini'],
+                'tempat_kerja' => $row['tempat_kerja'],
+                'jabatan_pada_tempat_kerja_saat_ini' => $row['jabatan_pada_tempat_kerja_saat_ini'],
+                'jabatan_pada_tempat_kerja_saat_ini' => $row[''],
                 'latitude' => $row['latitude'],
                 'longitude' => $row['longitude'],
+                'kota_kabupaten_tempat_pekerjaan_utama' => $row['kota_kabupaten_tempat_pekerjaan_utama'],
+                'provinsi_tempat_pekerjaan_Utama' => $row['provinsi_tempat_pekerjaan_utama'],
+                'informasi_pemimpin_instansi_tempat_utama_anda_bekerja' => $row['mohon_menuliskan_nama_dan_nomor_telepone_mail_pemimpin_instansi_tempat_anda_bekerja_tempat_pekerjaan_utama'],
+                'tahun_mulai_berkerja_pada_tempat_kerja_utama' => $row['tahun_mulai_berkerja_pada_tempat_kerja_utama_anda_saat_ini'],
+                'cara_mendapatkan_pekerjaan_utama_anda_saat_ini' => $row['bagaimana_cara_anda_mendapatkan_pekerjaan_pekerjaan_utama_anda_saat_ini'],
+                'penghasilan_perbulan' => $row['penghasilan_perbulan'],
+                'jenis_pendidikan_yang_ditempuh' => $row['jenis_pendidikan_yang_ditempuh'],
+                'tahun_masuk' => $row['tahun_masuk'],
+                'tahun_keluar' => $row['tahun_keluar'],
+                'prodi_spesialisasi_subSpesialis_s2_yang_diambil' => $row['program_studi_spesialisasi_sub_spesialis_s2_yang_diambil'],
+                'fakultas_dan_universitas_tempat_studi_saat_ini' => $row['fakultas_dan_universitas_tempat_studi_saat_ini'],
+                'mendapatkan_beasiswa' => $row['mendapatkan_beasiswa'],
+                'asal_beasiswa_yang_diperoleh' => $row['asal_beasiswa_yang_diperoleh'],
+                'tempat_bekerja_sebelum_melanjutkan_study' => $row['tempat_bekerja_sebelum_melanjutkan_study'],
+                'indeks_prestasi_akademik_menunjang_pengembangan_karir' => $row['indeks_prestasi_akademik_transkrip_menunjang_pengembangan_karir_saya'],
+                'pengetahuan_yang_didapatkan_membantu_dalam_melakukan_pekerjaan' => $row['pengetahuan_yang_didapatkan_aplikatif_sehingga_sangat_membantu_dalam_melakukan_pekerjaan'],
+                'pengetahuan_tambahan_yang_tidak_didapatkan_pada_kuliah' => $row['masih_diperlukan_pengetahuan_tambahan_lainnya_yang_tidak_didapatkan_pada_kuliah_untuk_membantu_melakukan_pekerjaan_saya'],
+                'ketrampilan_klinis_saat_kuliah_yang_menunjang_pekerjaan' => $row['ketrampilan_klinis_yang_diperoleh_semasa_kuliah_dan_pendidikan_profesi_dapat_digunakan_dengan_baik_serta_menunjang_pekerjaan_saya'],
+                'muatan_lokal_kurikulum_dokter_pulau_menunjang_pekerjaan' => $row['muatan_lokal_dalam_kurikulum_fk_unpatti_dokter_pulau_sangat_menunjang_pekerjaan_saya'],
+                'ketrampilan_diluar_kuliah_dan_dibutuhkan_menunjang_pekerjaan' => $row['ketrampilan_klinis_yang_diperoleh_diluar_bangku_kuliah_dan_pendidikan_profesi_masih_dibutuhkan_dalam_menunjang_pekerjaan_saya'],
+                'reputasi_almamater_dan_akresitasi_program_studi_dan_institusi' => $row['reputasi_almamater_dan_akresitasi_program_studi_dan_institusi_mempengaruhi_pekerjaan_serta_perkembangan_karir_saya'],
+                'pengurusan_birokrasi_administrasi_alumni_yang_sudah_baik' => $row['pengurusan_birokrasi_dan_administrasi_bagi_alumni_yang_sudah_baik'],
+                'bimbinganbantuan_akademis' => $row['bimbinganbantuan_akademis'],
+                'hubungan_dengan_staff_pengajar' => $row['hubungan_dengan_staff_pengajar'],
+                'kualitas_mengajar_dari_staff_pengajar' => $row['kualitas_mengajar_dari_staff_pengajar'],
+                'dedikasi_dari_para_staff_pengajar' => $row['dedikasi_dari_para_staff_pengajar'],
+                'kurikulumsilabussatuan_acara_perkuliahan' => $row['kurikulumsilabussatuan_acara_perkuliahan'],
+                'perlengkapan_laboratorium' => $row['perlengkapan_laboratorium'],
+                'pengadaan_material_pengajaran' => $row['pengadaan_material_pengajaran'],
+                
+                
             ];
             $alumni = Alumni::where('nim', $row['nim'])->first();
 

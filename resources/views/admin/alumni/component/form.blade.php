@@ -1,30 +1,45 @@
-<style>
-    .select2{
-        width: 100% !important;
-    }
-    .select2-selection{
-        height: 34px !important;
-        border-radius: 0!important;
-        border-color: #d2d6de!important;
-    }
-</style>
+
 <div class="row">
     <div class="col-md-4">
+        <div class="box box-widget widget-user">
+            <div class="widget-user-header bg-red">
+                {{-- <h3 class="widget-user-username">Alexander Pierce</h3>
+                <h5 class="widget-user-desc">Founder &amp; CEO</h5> --}}
+            </div>
+            <div class="widget-user-image" style="margin-left: -70px; top:50px">
+                <img class="img-circle" style="width: 140px; height: 140px" src="{{ asset('assets/img/no-profile-image.png') }}" alt="User Avatar">
+            </div>
+            <div class="box-footer">
+                <div class="row" style="margin-top: 60px">
+                    <div class="col-sm-12">
+                        @if(request()->is('alumni*'))
+                            
+                        <form id="upload-image-form" action="" method="post" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="nim" id="h_nim">
+                            <input type="file" name="photo" class="pull-left" required>
+                            <button class="pull-right">Ubah</button>
+                        </form>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="form-group">
             <label for="name">Name<span class="text-red">*</span></label>
-            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="[Nama]" required>
+            <input type="text" disabled class="form-control" id="name" name="name" value="{{ old('name') }}" placeholder="[Nama]" required>
             @error('name')
                 <span class="text-red">{{ $message }}</span>
             @enderror
         </div>
         <div class="form-group">
             <label for="nim">NIM<span class="text-red">*</span></label>
-            <input type="number" class="form-control" id="nim" name="nim" value="{{ old('nim') }}" placeholder="[NIM]" required>
+            <input type="number" disabled class="form-control" id="nim" name="nim" value="{{ old('nim') }}" placeholder="[NIM]" required>
             @error('nim')
                 <span class="text-red">{{ $message }}</span>
             @enderror
         </div>
-        <div class="form-group">
+        {{-- <div class="form-group">
             <label for="password">Password<span class="text-red">*</span></label>
             <input type="password" class="form-control" id="password" name="password" placeholder="[Password]" required>
             @error('password')
@@ -37,24 +52,24 @@
             @error('password')
                 <span class="text-red">{{ $message }}</span>
             @enderror
-        </div>
+        </div> --}}
         <div class="form-group">
             <label for="email">Email<span class="text-red">*</span></label>
-            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="[Email]" required>
+            <input type="email" disabled class="form-control" id="email" name="email" value="{{ old('email') }}" placeholder="[Email]" required>
             @error('email')
                 <span class="text-red">{{ $message }}</span>
             @enderror
         </div>
         <div class="form-group">
             <label for="entry_year">Tahun Masuk</label>
-            <input type="number" min="2000" max="3000" class="form-control" id="entry_year" name="entry_year" value="{{ old('entry_year') }}" placeholder="[Tahun Masuk]">
+            <input type="number" disabled min="2000" max="3000" class="form-control" id="entry_year" name="entry_year" value="{{ old('entry_year') }}" placeholder="[Tahun Masuk]">
             @error('entry_year')
                 <span class="text-red">{{ $message }}</span>
             @enderror
         </div>
         <div class="form-group">
             <label for="graduation_year">Tahun Lulus</label>
-            <input type="number" min="2000" max="3000" class="form-control" id="graduation_year" name="graduation_year" value="{{ old('graduation_year') }}" placeholder="[Tahun Lulus]">
+            <input type="number" disabled min="2000" max="3000" class="form-control" id="graduation_year" name="graduation_year" value="{{ old('graduation_year') }}" placeholder="[Tahun Lulus]">
             @error('graduation_year')
                 <span class="text-red">{{ $message }}</span>
             @enderror
@@ -63,30 +78,22 @@
     <div class="col-md-8">
         <div class="form-group">
             <label for="previous_job">Riwayat Pekerjaan</label>
-            <textarea class="form-control" id="previous_job" name="previous_job" rows="3" placeholder="[Pekerjaan Sebelumnya]">{{ old('previous_job') }}</textarea>
+            <textarea class="form-control" disabled id="previous_job" name="previous_job" rows="3" placeholder="[Pekerjaan Sebelumnya]">{{ old('previous_job') }}</textarea>
             @error('previous_job')
                 <span class="text-red">{{ $message }}</span>
             @enderror
         </div>
         <div class="form-group">
             <label for="workplace">Tempat Kerja</label>
-            <select type="text" class="form-control select2" id="workplace" name="workplace" placeholder="[Tempat Kerja]">
-                {{-- <option></option> --}}
-            </select>
+            <input type="text" disabled class="form-control select2" id="workplace" name="workplace" placeholder="[Tempat Kerja]">
             @error('workplace')
                 <span class="text-red">{{ $message }}</span>
             @enderror
-            <small class="text-grey">Kolom Tempat Kerja dapat dipilih atau di tambah secara manual. Jika anda memilih Tempat Kerja berdasarkan daftar yang tersedia maka sistem akan secara otomatis melengkapi kolom Kota/Kabupaten dan mengatur Peta</small>
         </div>
         <div class="form-group">
-            <label for="city_id">Kota/Kabupaten</label>
-            <select min="2000" max="3000" class="form-control" id="city_id" name="city_id">
-                <option>--- pilih Kota/Kabupaten ---</option>
-                @foreach ([] as $item)
-                <option value="{{ $item->id }}">{{ $item->city_name }}</option>
-                @endforeach
-            </select>
-            @error('city_id')
+            <label for="city">Kota/Kabupaten</label>
+            <input type="text" disabled class="form-control" id="city" name="city">
+            @error('city')
                 <span class="text-red">{{ $message }}</span>
             @enderror
         </div>
@@ -94,7 +101,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="number" step="any" class="form-control" id="latitude" name="latitude" placeholder="[Latitude]">
+                    <input type="number" disabled step="any" class="form-control" id="latitude" name="latitude" placeholder="[Latitude]">
                     @error('latitude')
                         <span class="text-red">{{ $message }}</span>
                     @enderror
@@ -102,13 +109,13 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="number" step="any" class="form-control" id="longitude" name="longitude" placeholder="[Longitude]">
+                    <input type="number" disabled step="any" class="form-control" id="longitude" name="longitude" placeholder="[Longitude]">
                     @error('longitude')
                         <span class="text-red">{{ $message }}</span>
                     @enderror
                 </div>
             </div>
         </div>
-        <div id="map" style="height: 500px"></div>
+        <div id="map" class="map" style="height: 500px"></div>
     </div>
 </div>

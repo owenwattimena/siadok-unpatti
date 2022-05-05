@@ -59,17 +59,17 @@ class CreateAlumnisTable extends Migration
             $table->text('leval_tingkatan_tempat_anda_bekerja')->nullable();
             $table->text('kesesuaian_bidang_studi_dengan_perkerjaan_anda_sekarang')->nullable();
             $table->text('status_pekerjaan_utama_saat_ini')->nullable();
-            $table->text('tempat_Kerja')->nullable();
+            $table->text('tempat_kerja')->nullable();
             $table->text('jabatan_pada_tempat_kerja_saat_ini')->nullable();
             $table->text('kota_kabupaten_tempat_pekerjaan_utama')->nullable();
             $table->text('provinsi_tempat_pekerjaan_Utama')->nullable();
-            $table->text('informasi_pemimpin_instansi_tempat_utama_anda_bekerja)')->nullable();
+            $table->text('informasi_pemimpin_instansi_tempat_utama_anda_bekerja')->nullable();
             $table->text('tahun_mulai_berkerja_pada_tempat_kerja_utama')->nullable();
             $table->text('cara_mendapatkan_pekerjaan_utama_anda_saat_ini')->nullable();
             $table->text('penghasilan_perbulan')->nullable();
             $table->text('jenis_pendidikan_yang_ditempuh')->nullable();
-            $table->integer('tahun_masuk')->nullable();
-            $table->integer('tahun_keluar')->nullable();
+            $table->text('tahun_masuk')->nullable();
+            $table->text('tahun_keluar')->nullable();
             $table->text('prodi_spesialisasi_subSpesialis_s2_yang_diambil')->nullable();
             $table->text('fakultas_dan_universitas_tempat_studi_saat_ini')->nullable();
             $table->text('mendapatkan_beasiswa')->nullable();
@@ -90,6 +90,7 @@ class CreateAlumnisTable extends Migration
             $table->integer('kurikulumsilabussatuan_acara_perkuliahan')->nullable();
             $table->integer('perlengkapan_laboratorium')->nullable();
             $table->integer('pengadaan_material_pengajaran')->nullable();
+            
             $table->integer('fasilitas_perpustakaan')->nullable();
             $table->integer('orientasi_praktis_dalam_pengajaran')->nullable();
             $table->integer('pelatihan_di_laboratorium')->nullable();
@@ -158,6 +159,9 @@ class CreateAlumnisTable extends Migration
 
             $table->text('latitude')->nullable();
             $table->text('longitude')->nullable();
+
+            $table->text('photo')->nullable();
+
             $table->timestamps();
         });
     }

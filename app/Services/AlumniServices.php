@@ -21,13 +21,35 @@ class AlumniServices
 {
 
     // use to get list of alumni or specific alumni by nim
-    public static function getAlumnus(int $nim = null, $filter = null)
+    public static function getTracerStudy(array $filter = null)
     {
-        $query = DB::table('alumni');
-            // ->select(['users.*', 'alumni.entry_year', 'alumni.graduation_year', 'alumni.previous_job', 'workplaces.id as workplace_id', 'workplaces.workplace_name', 'workplaces.latitude', 'workplaces.longitude', 'cities.id as city_id', 'cities.city_name', 'cities.description'])
-            // ->leftJoin('alumni', 'users.id', '=', 'alumni.user_id')
-            // ->leftJoin('workplaces', 'alumni.workplace_id', '=', 'workplaces.id')
-            // ->leftJoin('cities', 'workplaces.city_id', '=', 'cities.id');
+        $query = Alumni::query();
+        // $query = DB::table('alumni')->makeHidden(['latitude', 'longitude', 'photo', 'created_at', 'updated_at']);
+
+        if($filter){
+            $query->where($filter);
+        }
+        return $query
+            ->get()->makeHidden(['latitude', 'longitude', 'photo', 'created_at', 'updated_at']);
+    }
+    public static function getAlumnus(?int $nim = null, ?array $filter = null)
+    {
+        $query = DB::table('alumni')
+            ->select([
+                'id',
+                'nama_lengkap',
+                'nim',
+                'email',
+                'tahun_masuk_s1',
+                'tahun_lulus_s1',
+                'wahana_internship',
+                'tempat_kerja',
+                'kota_kabupaten_tempat_pekerjaan_utama as kota_kabupaten',
+                'latitude',
+                'longitude',
+                'photo',
+            ]);
+
         if($filter){
             $query->where($filter);
         }
@@ -48,40 +70,45 @@ class AlumniServices
     public static function getGroupWorkplace($filter = null)
     {
         
-        $items =  Workplace::select(['workplaces.id', 'workplaces.workplace_name', 'workplaces.latitude', 'workplaces.longitude', 'cities.city_name'])
-            ->join('alumni', 'alumni.workplace_id', '=', 'workplaces.id')
-            ->leftJoin('cities', 'workplaces.city_id', '=', 'cities.id')
-            ->orderBy('workplaces.workplace_name', 'asc');
-        $items = $items->get();
+        $items =  DB::table('alumni')->select(
+            'kota_kabupaten_tempat_pekerjaan_utama as kota_kabupaten',
+            'tempat_kerja',
+            'latitude', 
+            'longitude');
+        if($filter){
+            $items->where($filter);
+        }
+            
+        $items = $items->orderBy('tempat_kerja', 'asc')->distinct()->get();
+        // $items = $items->get();
 
-        foreach ($items as $item) {
+        foreach ($items as $key => $item) {
             $alumni =  DB::table('alumni')
-                ->select(['alumni.entry_year', 'alumni.graduation_year', 'alumni.previous_job','users.nim', 'users.name'])
-                ->leftJoin('users', 'users.id', '=', 'alumni.user_id')
-                ->where('alumni.workplace_id', $item->id)
-                ->orderBy('alumni.entry_year', 'asc');
+                ->select(['tahun_masuk_s1', 'tahun_lulus_s1', 'tempat_kerja','nim', 'nama_lengkap', 'kota_kabupaten_tempat_pekerjaan_utama as kota_kabupaten'])
+                ->where('tempat_kerja', $item->tempat_kerja)
+                ->orderBy('tempat_kerja', 'asc');
             if($filter){
                 $alumni->where($filter);
             }
-            $alumni = $alumni->get()->groupBy('entry_year');
-            // dd($alumni);
+            $alumni = $alumni->get()->groupBy('tahun_masuk_s1');
             $listAngkatan = [];
             foreach ($alumni as $key => $value) {
                 $listAngkatan[] = new Collection(
                     [
-                        'entry_year' => $key,
+                        'tahun_masuk_s1' => $key,
                         'alumnus' => $value
                     ]
                 );
 
             }
             $item->angkatan = new Collection($listAngkatan);
+            // $item->push(['angkatan'=>new Collection($listAngkatan)]);
         }
 
         // foreach ($items as $item) {
         //     $item->alumni = [$item->workplace_name . ' - ' . $item->city_name];
         // }
-
+        // dd($items);
         return $items;
     }
 
