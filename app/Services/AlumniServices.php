@@ -30,7 +30,7 @@ class AlumniServices
             $query->where($filter);
         }
         return $query
-            ->get()->makeHidden(['latitude', 'longitude', 'photo', 'created_at', 'updated_at']);
+            ->get()->makeHidden(['id', 'photo', 'created_at', 'updated_at']);
     }
     public static function getAlumnus(?int $nim = null, ?array $filter = null)
     {
